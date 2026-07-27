@@ -1,0 +1,955 @@
+@import "tailwindcss";
+
+:root {
+  --navy: #102b35;
+  --navy-soft: #1a3a45;
+  --ivory: #f7f3eb;
+  --paper: #fffdf8;
+  --sand: #e9dfcf;
+  --gold: #c69a52;
+  --ink: #18303a;
+  --muted: #6f756f;
+  --line: rgba(24, 48, 58, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--ivory);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+body,
+button,
+input,
+select,
+textarea {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+a,
+summary,
+input,
+select,
+textarea {
+  outline-offset: 4px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+}
+
+h1 {
+  margin-bottom: 2rem;
+  font-size: clamp(4rem, 8.2vw, 8.5rem);
+}
+
+h2 {
+  margin-bottom: 0;
+  font-size: clamp(3rem, 5.4vw, 6rem);
+}
+
+h1 em,
+h2 em {
+  color: var(--gold);
+  font-weight: 400;
+}
+
+h3 {
+  line-height: 1.2;
+}
+
+.section-pad {
+  padding: 8rem max(5vw, 2rem);
+}
+
+.site-header {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  display: grid;
+  width: 100%;
+  padding: 1.5rem max(5vw, 2rem);
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  color: var(--paper);
+}
+
+.wordmark {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.45rem;
+  letter-spacing: -0.03em;
+}
+
+.desktop-nav {
+  display: flex;
+  gap: 2.5rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.desktop-nav a,
+footer nav a {
+  transition: color 180ms ease;
+}
+
+.desktop-nav a:hover,
+footer nav a:hover {
+  color: var(--gold);
+}
+
+.site-header > .button {
+  justify-self: end;
+}
+
+.button,
+.text-link {
+  display: inline-flex;
+  min-height: 3.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  border: 1px solid currentColor;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.77rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.button {
+  padding: 0.9rem 1.2rem;
+}
+
+.button:hover {
+  background: currentColor;
+  transform: translateY(-2px);
+}
+
+.button:hover span {
+  color: var(--ivory);
+}
+
+.button-small {
+  min-height: 2.6rem;
+  padding: 0.6rem 1rem;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.text-link {
+  min-height: auto;
+  padding: 0.35rem 0;
+  border-width: 0 0 1px;
+}
+
+.text-link:hover {
+  color: var(--gold);
+}
+
+.mobile-menu {
+  display: none;
+}
+
+.hero {
+  display: grid;
+  min-height: 100svh;
+  padding-top: 10rem;
+  background: var(--navy);
+  color: var(--paper);
+  grid-template-columns: minmax(0, 1.18fr) minmax(20rem, 0.82fr);
+  align-items: center;
+  overflow: hidden;
+}
+
+.hero-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 62rem;
+}
+
+.eyebrow {
+  margin-bottom: 1.6rem;
+  color: var(--gold);
+  font-size: 0.71rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.eyebrow-light {
+  color: #ebc786;
+}
+
+.hero-intro {
+  max-width: 40rem;
+  margin-bottom: 2.25rem;
+  color: rgba(255, 253, 248, 0.78);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.22rem, 1.8vw, 1.65rem);
+  line-height: 1.55;
+}
+
+.hero .button:hover {
+  background: var(--paper);
+  color: var(--navy);
+}
+
+.location-line {
+  margin: 4rem 0 0;
+  color: rgba(255, 253, 248, 0.45);
+  font-size: 0.68rem;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+}
+
+.hero-visual {
+  position: relative;
+  min-height: 64vh;
+}
+
+.hero-arch {
+  position: absolute;
+  inset: -6rem -10rem -10rem 8%;
+  border: 1px solid rgba(198, 154, 82, 0.45);
+  border-radius: 50% 50% 0 0;
+}
+
+.hero-photo {
+  position: absolute;
+  inset: 2rem 0 0 13%;
+  z-index: 1;
+}
+
+.vertical-note {
+  position: absolute;
+  z-index: 2;
+  right: -1.5rem;
+  bottom: 4rem;
+  color: rgba(255, 253, 248, 0.5);
+  font-size: 0.63rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transform: rotate(90deg);
+}
+
+.photo-placeholder {
+  display: flex;
+  min-height: 28rem;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px solid rgba(198, 154, 82, 0.52);
+  background:
+    linear-gradient(135deg, transparent 49.8%, rgba(198, 154, 82, 0.25) 50%, transparent 50.2%),
+    linear-gradient(45deg, transparent 49.8%, rgba(198, 154, 82, 0.25) 50%, transparent 50.2%),
+    #24434e;
+  color: rgba(255, 253, 248, 0.65);
+  font-size: 0.67rem;
+  letter-spacing: 0.18em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.placeholder-mark {
+  display: grid;
+  width: 4.5rem;
+  height: 4.5rem;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  color: var(--gold);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.2rem;
+  letter-spacing: 0.08em;
+  place-items: center;
+}
+
+.manifesto {
+  display: flex;
+  padding: 2.4rem max(5vw, 2rem);
+  background: var(--gold);
+  color: var(--navy);
+  justify-content: space-between;
+}
+
+.manifesto p {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.1rem, 2vw, 1.65rem);
+  font-style: italic;
+}
+
+.music,
+.process,
+.faqs {
+  background: var(--paper);
+}
+
+.section-heading {
+  display: grid;
+  margin-bottom: 5rem;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 8vw;
+  align-items: end;
+}
+
+.section-heading > p {
+  max-width: 31rem;
+  margin-bottom: 0.7rem;
+  color: var(--muted);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.2rem;
+  line-height: 1.65;
+}
+
+.featured-release {
+  display: grid;
+  margin-bottom: 6rem;
+  background: var(--sand);
+  grid-template-columns: minmax(18rem, 0.9fr) minmax(20rem, 1.1fr);
+}
+
+.release-art {
+  min-height: 40rem;
+  background-color: #d7c7b0;
+  color: var(--navy);
+}
+
+.release-copy {
+  display: flex;
+  padding: clamp(2.5rem, 6vw, 7rem);
+  justify-content: center;
+  flex-direction: column;
+}
+
+.release-copy h3 {
+  margin-bottom: 1.5rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.8rem, 5vw, 5rem);
+  font-weight: 400;
+  letter-spacing: -0.045em;
+}
+
+.release-copy > p:not(.eyebrow) {
+  max-width: 35rem;
+  margin-bottom: 2rem;
+  color: var(--muted);
+}
+
+.button-dark {
+  color: var(--navy);
+}
+
+.button-dark:hover {
+  background: var(--navy);
+  color: var(--paper);
+}
+
+.release-list {
+  border-top: 1px solid var(--line);
+}
+
+.release-row {
+  display: grid;
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--line);
+  grid-template-columns: 5rem 1fr auto;
+  align-items: center;
+}
+
+.release-number {
+  color: var(--gold);
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+}
+
+.release-row h3 {
+  margin: 0 0 0.25rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.75rem;
+  font-weight: 400;
+}
+
+.release-row p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.release-row a {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.weddings {
+  background: var(--navy);
+  color: var(--paper);
+}
+
+.wedding-image {
+  position: relative;
+  padding: max(5vw, 2rem) max(5vw, 2rem) 0;
+}
+
+.wedding-image .photo-placeholder {
+  min-height: 70vh;
+}
+
+.image-caption {
+  display: flex;
+  position: absolute;
+  right: max(5vw, 2rem);
+  bottom: 0;
+  left: max(5vw, 2rem);
+  padding: 1.2rem 1.5rem;
+  background: rgba(16, 43, 53, 0.9);
+  font-size: 0.67rem;
+  letter-spacing: 0.14em;
+  justify-content: space-between;
+  text-transform: uppercase;
+}
+
+.wedding-intro {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 8vw;
+  align-items: end;
+}
+
+.wedding-copy > p {
+  margin-bottom: 2.5rem;
+  color: rgba(255, 253, 248, 0.7);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  line-height: 1.65;
+}
+
+.button-gold {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.button-gold:hover {
+  background: var(--gold);
+  color: var(--navy);
+}
+
+.wedding-offerings {
+  display: grid;
+  padding-top: 0;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.wedding-offerings article {
+  padding: 2.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.wedding-offerings article:last-child {
+  border-right: 0;
+}
+
+.offering-number {
+  color: var(--gold);
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+}
+
+.wedding-offerings h3 {
+  max-width: 18rem;
+  margin-bottom: 1.4rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.7rem;
+  font-weight: 400;
+}
+
+.wedding-offerings article > p:last-child {
+  margin: 0;
+  color: rgba(255, 253, 248, 0.6);
+}
+
+.process-grid {
+  display: grid;
+  border-top: 1px solid var(--line);
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.process-grid article {
+  min-height: 18rem;
+  padding: 2.2rem;
+  border-right: 1px solid var(--line);
+}
+
+.process-grid article:last-child {
+  border-right: 0;
+}
+
+.process-grid span {
+  display: block;
+  margin-bottom: 4rem;
+  color: var(--gold);
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+}
+
+.process-grid h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+}
+
+.process-grid p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.about {
+  display: grid;
+  background: var(--sand);
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 8vw;
+  align-items: center;
+}
+
+.about-images {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: end;
+}
+
+.about-images .photo-placeholder:first-child {
+  min-height: 37rem;
+}
+
+.about-images .photo-placeholder:last-child {
+  min-height: 25rem;
+  border-left: 0;
+  background-color: #d8c6aa;
+  color: var(--navy);
+}
+
+.about-copy h2 {
+  margin-bottom: 2.5rem;
+  font-size: clamp(2.7rem, 4.6vw, 5rem);
+}
+
+.about-copy > p:not(.eyebrow) {
+  color: #5c625e;
+}
+
+.faqs {
+  display: grid;
+  grid-template-columns: 0.7fr 1.3fr;
+  gap: 10vw;
+}
+
+.faq-list {
+  border-top: 1px solid var(--line);
+}
+
+.faq-list details {
+  border-bottom: 1px solid var(--line);
+}
+
+.faq-list summary {
+  display: flex;
+  padding: 1.7rem 0;
+  cursor: pointer;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.22rem;
+  justify-content: space-between;
+  list-style: none;
+}
+
+.faq-list summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-list summary span {
+  color: var(--gold);
+  font-family: Arial, Helvetica, sans-serif;
+  transition: transform 180ms ease;
+}
+
+.faq-list details[open] summary span {
+  transform: rotate(45deg);
+}
+
+.faq-list details p {
+  max-width: 42rem;
+  padding: 0 3rem 1.7rem 0;
+  color: var(--muted);
+}
+
+.contact {
+  display: grid;
+  background: var(--navy);
+  color: var(--paper);
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 10vw;
+}
+
+.contact-heading {
+  align-self: center;
+}
+
+.contact-heading h2 {
+  margin-bottom: 2rem;
+  font-size: clamp(3rem, 5vw, 5.5rem);
+}
+
+.contact-heading > p:not(.eyebrow) {
+  max-width: 33rem;
+  margin-bottom: 2rem;
+  color: rgba(255, 253, 248, 0.65);
+}
+
+.contact-form {
+  display: grid;
+  padding: clamp(2rem, 4vw, 4rem);
+  border: 1px solid rgba(198, 154, 82, 0.42);
+  grid-template-columns: 1fr 1fr;
+  gap: 1.4rem;
+}
+
+.contact-form label {
+  display: flex;
+  color: rgba(255, 253, 248, 0.65);
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  flex-direction: column;
+  text-transform: uppercase;
+}
+
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+  width: 100%;
+  margin-top: 0.6rem;
+  padding: 0.85rem 0;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0;
+  background: transparent;
+  color: var(--paper);
+  font-size: 1rem;
+  resize: vertical;
+}
+
+.contact-form select option {
+  color: var(--navy);
+}
+
+.full-field {
+  grid-column: 1 / -1;
+}
+
+.form-note {
+  margin: 0;
+  color: rgba(255, 253, 248, 0.4);
+  font-size: 0.7rem;
+}
+
+.contact-form .button {
+  justify-self: end;
+}
+
+footer {
+  display: grid;
+  padding: 3.5rem max(5vw, 2rem);
+  background: #0a2028;
+  color: rgba(255, 253, 248, 0.58);
+  grid-template-columns: 0.8fr 1.2fr auto;
+  gap: 4rem;
+  align-items: start;
+}
+
+.wordmark-light {
+  color: var(--paper);
+}
+
+footer > p {
+  max-width: 38rem;
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+footer nav {
+  display: flex;
+  gap: 1.4rem;
+  color: var(--paper);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.copyright {
+  grid-column: 2 / -1;
+  color: rgba(255, 253, 248, 0.3);
+  font-size: 0.65rem;
+}
+
+@media (max-width: 900px) {
+  .section-pad {
+    padding: 6rem 1.5rem;
+  }
+
+  .site-header {
+    grid-template-columns: 1fr auto;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .desktop-nav,
+  .site-header > .button {
+    display: none;
+  }
+
+  .mobile-menu {
+    display: block;
+    position: relative;
+    justify-self: end;
+  }
+
+  .mobile-menu summary {
+    cursor: pointer;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    list-style: none;
+    text-transform: uppercase;
+  }
+
+  .mobile-menu summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mobile-menu nav {
+    display: flex;
+    position: absolute;
+    top: 2rem;
+    right: 0;
+    width: 13rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(198, 154, 82, 0.45);
+    background: var(--navy);
+    gap: 1rem;
+    flex-direction: column;
+  }
+
+  .hero {
+    min-height: auto;
+    padding-top: 9rem;
+    grid-template-columns: 1fr;
+  }
+
+  .hero-visual {
+    min-height: 36rem;
+    margin-top: 4rem;
+  }
+
+  .hero-arch {
+    inset: -2rem -6rem -4rem 3rem;
+  }
+
+  .hero-photo {
+    inset: 0 2rem 0 5rem;
+  }
+
+  .manifesto p:nth-child(2) {
+    display: none;
+  }
+
+  .section-heading,
+  .wedding-intro,
+  .about,
+  .faqs,
+  .contact {
+    grid-template-columns: 1fr;
+  }
+
+  .section-heading {
+    gap: 2rem;
+  }
+
+  .featured-release {
+    grid-template-columns: 1fr;
+  }
+
+  .release-art {
+    min-height: 28rem;
+  }
+
+  .wedding-image {
+    padding: 1.5rem 1.5rem 0;
+  }
+
+  .wedding-image .photo-placeholder {
+    min-height: 55vh;
+  }
+
+  .image-caption {
+    right: 1.5rem;
+    left: 1.5rem;
+  }
+
+  .wedding-intro {
+    gap: 3rem;
+  }
+
+  .wedding-offerings {
+    grid-template-columns: 1fr;
+  }
+
+  .wedding-offerings article {
+    padding: 2.5rem 0;
+    border-right: 0;
+  }
+
+  .process-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .process-grid article:nth-child(2) {
+    border-right: 0;
+  }
+
+  .about {
+    gap: 4rem;
+  }
+
+  .faqs {
+    gap: 3rem;
+  }
+
+  .contact {
+    gap: 4rem;
+  }
+
+  footer {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .copyright {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 580px) {
+  h1 {
+    font-size: clamp(3.7rem, 18vw, 5.5rem);
+  }
+
+  .manifesto p {
+    font-size: 1rem;
+  }
+
+  .release-row {
+    grid-template-columns: 3rem 1fr;
+  }
+
+  .release-row a {
+    grid-column: 2;
+    margin-top: 1rem;
+  }
+
+  .process-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .process-grid article {
+    min-height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .process-grid span {
+    margin-bottom: 2rem;
+  }
+
+  .about-images {
+    grid-template-columns: 1fr;
+  }
+
+  .about-images .photo-placeholder:last-child {
+    min-height: 18rem;
+    border-top: 0;
+    border-left: 1px solid rgba(198, 154, 82, 0.52);
+  }
+
+  .contact-form {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-form .button {
+    justify-self: stretch;
+  }
+
+  footer nav {
+    flex-wrap: wrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
