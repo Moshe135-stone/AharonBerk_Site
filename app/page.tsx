@@ -1,3 +1,5 @@
+import { ScrollHero } from "./ScrollHero";
+
 const releases = [
   { title: "V’erastich Li", type: "Original release", number: "01" },
   { title: "40 Days", type: "Selected song", number: "02" },
@@ -58,64 +60,7 @@ function PhotoPlaceholder({
 export default function Home() {
   return (
     <main>
-      <header className="site-header">
-        <a className="wordmark" href="#top" aria-label="Aharon Berk home">
-          Aharon Berk
-        </a>
-        <nav className="desktop-nav" aria-label="Main navigation">
-          <a href="#music">Music</a>
-          <a href="#weddings">Weddings</a>
-          <a href="#about">About</a>
-          <a href="#contact">Contact</a>
-        </nav>
-        <a className="button button-small" href="#contact">
-          Enquire <span aria-hidden="true">↗</span>
-        </a>
-        <details className="mobile-menu">
-          <summary aria-label="Open navigation">Menu</summary>
-          <nav aria-label="Mobile navigation">
-            <a href="#music">Music</a>
-            <a href="#weddings">Weddings</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
-          </nav>
-        </details>
-      </header>
-
-      <section className="hero section-pad" id="top">
-        <div className="hero-copy">
-          <p className="eyebrow">Singer · Recording artist · Live performer</p>
-          <h1>
-            Jewish music
-            <br />
-            <em>with heart</em>
-            <br />
-            and soul.
-          </h1>
-          <p className="hero-intro">
-            Aharon Berk creates original music and leads Chuppas, Horas and
-            wedding celebrations in South Africa and internationally.
-          </p>
-          <div className="button-row">
-            <a className="button" href="#music">
-              Listen to the music <span aria-hidden="true">↗</span>
-            </a>
-            <a className="text-link" href="#weddings">
-              Wedding enquiries <span aria-hidden="true">→</span>
-            </a>
-          </div>
-          <p className="location-line">
-            Johannesburg · Cape Town · South Africa · International
-          </p>
-        </div>
-        <div className="hero-visual">
-          <div className="hero-arch" aria-hidden="true" />
-          <PhotoPlaceholder label="Artist portrait" className="hero-photo" />
-          <p className="vertical-note" aria-hidden="true">
-            Original music · Live celebrations
-          </p>
-        </div>
-      </section>
+      <ScrollHero />
 
       <section className="manifesto">
         <p>Rooted in meaning.</p>
