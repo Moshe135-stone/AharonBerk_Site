@@ -1,9 +1,37 @@
 "use client";
 
+import type { PointerEvent as ReactPointerEvent } from "react";
 import { useEffect, useRef } from "react";
 
 export function ScrollHero() {
   const stageRef = useRef<HTMLElement>(null);
+  const wordmarkRef = useRef<HTMLAnchorElement>(null);
+
+  const moveLogoFlare = (event: ReactPointerEvent<HTMLAnchorElement>) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const scaleX = event.currentTarget.offsetWidth / bounds.width;
+    const scaleY = event.currentTarget.offsetHeight / bounds.height;
+    event.currentTarget.setAttribute("data-flare-active", "");
+    event.currentTarget.style.setProperty(
+      "--flare-x",
+      `${(event.clientX - bounds.left) * scaleX}px`,
+    );
+    event.currentTarget.style.setProperty(
+      "--flare-y",
+      `${(event.clientY - bounds.top) * scaleY}px`,
+    );
+  };
+
+  const stopLogoFlare = (event: ReactPointerEvent<HTMLAnchorElement>) => {
+    event.currentTarget.removeAttribute("data-flare-active");
+  };
+
+  const clearLogoFlareOutside = (event: ReactPointerEvent<HTMLElement>) => {
+    const wordmark = wordmarkRef.current;
+    if (wordmark && !wordmark.contains(event.target as Node)) {
+      wordmark.removeAttribute("data-flare-active");
+    }
+  };
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -47,17 +75,30 @@ export function ScrollHero() {
   }, []);
 
   return (
-    <section className="hero-scroll-stage" id="top" ref={stageRef}>
+    <section
+      className="hero-scroll-stage"
+      id="top"
+      ref={stageRef}
+      onPointerMove={clearLogoFlareOutside}
+    >
       <header className="site-header">
         <nav className="hero-nav hero-nav-left" aria-label="Music navigation">
-          <a href="#music">Music</a>
-          <a href="#weddings">Weddings</a>
+          <a href="#music">
+            <span>Music</span>
+          </a>
+          <a href="#weddings">
+            <span>Weddings</span>
+          </a>
         </nav>
 
         <a
           className="animated-wordmark"
           href="#top"
+          ref={wordmarkRef}
           aria-label="Aharon Berk home"
+          onPointerEnter={moveLogoFlare}
+          onPointerLeave={stopLogoFlare}
+          onPointerMove={moveLogoFlare}
         >
           <img src="/brand/aharon.svg" alt="" width="497" height="93" />
           <img src="/brand/berk.svg" alt="" width="297" height="93" />
@@ -67,8 +108,12 @@ export function ScrollHero() {
           className="hero-nav hero-nav-right"
           aria-label="Information navigation"
         >
-          <a href="#about">About</a>
-          <a href="#contact">Contact</a>
+          <a href="#about">
+            <span>About</span>
+          </a>
+          <a href="#contact">
+            <span>Contact</span>
+          </a>
         </nav>
 
         <details className="mobile-menu">
