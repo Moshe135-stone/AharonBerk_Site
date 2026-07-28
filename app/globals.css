@@ -95,16 +95,25 @@ h3 {
 }
 
 .site-header {
-  position: absolute;
-  z-index: 5;
+  position: fixed;
+  z-index: 50;
   top: 0;
   left: 0;
   display: grid;
   width: 100%;
-  padding: clamp(1.5rem, 4vw, 3.1rem) clamp(2rem, 7.5vw, 7rem);
+  height: var(--nav-height);
+  padding: calc(1.7rem - (var(--hero-progress) * 0.7rem))
+    clamp(2rem, 7.5vw, 7rem);
   grid-template-columns: 1fr minmax(18rem, 32vw) 1fr;
   align-items: start;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.76);
+  backdrop-filter: blur(20px);
   color: var(--paper);
+  box-shadow: 0 0.8rem 2.5rem rgba(0, 0, 0, 0.22);
+  transition:
+    height 80ms linear,
+    padding 80ms linear;
 }
 
 .wordmark {
@@ -115,16 +124,18 @@ h3 {
 
 .hero-nav {
   display: flex;
-  padding-top: 0.8rem;
+  padding-top: calc(1.4rem - (var(--hero-progress) * 0.8rem));
   gap: clamp(2rem, 4vw, 4.5rem);
   font-size: 0.67rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  animation: nav-out-left 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.34s both;
 }
 
 .hero-nav-right {
   justify-content: flex-end;
+  animation-name: nav-out-right;
 }
 
 .hero-nav a,
@@ -198,8 +209,9 @@ footer nav a:hover {
 
 .hero-scroll-stage {
   --hero-progress: 0;
+  --nav-height: calc(9rem - (var(--hero-progress) * 3.7rem));
   position: relative;
-  height: 155svh;
+  height: 190svh;
   background: #000;
 }
 
@@ -214,13 +226,15 @@ footer nav a:hover {
 
 .hero-background {
   position: absolute;
-  inset: -10% 0 auto;
+  top: var(--nav-height);
+  right: 0;
+  left: 0;
   width: 100%;
-  height: 118%;
+  height: calc(112% - 5rem);
   object-fit: cover;
-  object-position: center 42%;
-  transform: translate3d(0, calc(var(--hero-progress) * 11svh), 0)
-    scale(1.035);
+  object-position: center 40%;
+  transform: translate3d(0, calc(var(--hero-progress) * 22svh), 0)
+    scale(1.045);
   transform-origin: center center;
   will-change: transform;
 }
@@ -240,7 +254,10 @@ footer nav a:hover {
 
 .hero-shade {
   position: absolute;
-  inset: 0;
+  top: var(--nav-height);
+  right: 0;
+  bottom: 0;
+  left: 0;
   background:
     linear-gradient(to bottom, rgba(0, 0, 0, 0.78) 0%, transparent 32%),
     linear-gradient(
@@ -262,6 +279,9 @@ footer nav a:hover {
   flex-direction: column;
   gap: 0.05rem;
   filter: drop-shadow(0 2px 18px rgba(0, 0, 0, 0.38));
+  transform: scale(calc(1 - (var(--hero-progress) * 0.48)));
+  transform-origin: top center;
+  will-change: transform;
 }
 
 .animated-wordmark img {
@@ -338,6 +358,28 @@ footer nav a:hover {
   to {
     opacity: 1;
     clip-path: inset(0 0 0 0);
+    transform: translateX(0);
+  }
+}
+
+@keyframes nav-out-left {
+  from {
+    opacity: 0;
+    transform: translateX(16vw);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes nav-out-right {
+  from {
+    opacity: 0;
+    transform: translateX(-16vw);
+  }
+  to {
+    opacity: 1;
     transform: translateX(0);
   }
 }
@@ -813,8 +855,9 @@ footer nav {
   }
 
   .site-header {
-    grid-template-columns: 1fr auto;
-    padding: 1.25rem 1.5rem;
+    height: var(--nav-height);
+    padding: calc(1.15rem - (var(--hero-progress) * 0.3rem)) 1.5rem;
+    grid-template-columns: 1fr minmax(12rem, 55vw) 1fr;
     align-items: start;
   }
 
@@ -823,16 +866,16 @@ footer nav {
   }
 
   .animated-wordmark {
-    width: min(64vw, 22rem);
-    grid-column: 1;
-    justify-self: start;
+    width: 100%;
+    grid-column: 2;
+    justify-self: center;
   }
 
   .mobile-menu {
     display: block;
     position: relative;
     z-index: 2;
-    grid-column: 2;
+    grid-column: 3;
     grid-row: 1;
     padding-top: 0.55rem;
     justify-self: end;
@@ -865,15 +908,22 @@ footer nav {
   }
 
   .hero-scroll-stage {
-    height: 140svh;
+    --nav-height: calc(7.4rem - (var(--hero-progress) * 2.4rem));
+    height: 170svh;
   }
 
   .hero-background {
-    inset: -6% 0 auto;
-    height: 114%;
+    top: var(--nav-height);
+    right: 0;
+    left: 0;
+    height: calc(110% - 3rem);
     object-position: 54% 45%;
-    transform: translate3d(0, calc(var(--hero-progress) * 8svh), 0)
+    transform: translate3d(0, calc(var(--hero-progress) * 16svh), 0)
       scale(1.04);
+  }
+
+  .hero-shade {
+    top: var(--nav-height);
   }
 
   .hero-kicker {
@@ -1031,6 +1081,12 @@ footer nav {
     opacity: 1;
     animation: none;
     clip-path: none;
+    transform: none;
+  }
+
+  .hero-nav {
+    opacity: 1;
+    animation: none;
     transform: none;
   }
 

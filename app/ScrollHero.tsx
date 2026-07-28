@@ -42,6 +42,40 @@ export function ScrollHero() {
 
   return (
     <section className="hero-scroll-stage" id="top" ref={stageRef}>
+      <header className="site-header">
+        <nav className="hero-nav hero-nav-left" aria-label="Music navigation">
+          <a href="#music">Music</a>
+          <a href="#weddings">Weddings</a>
+        </nav>
+
+        <a
+          className="animated-wordmark"
+          href="#top"
+          aria-label="Aharon Berk home"
+        >
+          <img src="/brand/aharon.svg" alt="" width="497" height="93" />
+          <img src="/brand/berk.svg" alt="" width="297" height="93" />
+        </a>
+
+        <nav
+          className="hero-nav hero-nav-right"
+          aria-label="Information navigation"
+        >
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </nav>
+
+        <details className="mobile-menu">
+          <summary aria-label="Open navigation">Menu</summary>
+          <nav aria-label="Mobile navigation">
+            <a href="#music">Music</a>
+            <a href="#weddings">Weddings</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+          </nav>
+        </details>
+      </header>
+
       <div className="hero-sticky">
         <img
           className="hero-background"
@@ -52,40 +86,6 @@ export function ScrollHero() {
           fetchPriority="high"
         />
         <div className="hero-shade" aria-hidden="true" />
-
-        <header className="site-header">
-          <nav className="hero-nav hero-nav-left" aria-label="Music navigation">
-            <a href="#music">Music</a>
-            <a href="#weddings">Weddings</a>
-          </nav>
-
-          <a
-            className="animated-wordmark"
-            href="#top"
-            aria-label="Aharon Berk home"
-          >
-            <img src="/brand/aharon.svg" alt="" width="497" height="93" />
-            <img src="/brand/berk.svg" alt="" width="297" height="93" />
-          </a>
-
-          <nav
-            className="hero-nav hero-nav-right"
-            aria-label="Information navigation"
-          >
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
-          </nav>
-
-          <details className="mobile-menu">
-            <summary aria-label="Open navigation">Menu</summary>
-            <nav aria-label="Mobile navigation">
-              <a href="#music">Music</a>
-              <a href="#weddings">Weddings</a>
-              <a href="#about">About</a>
-              <a href="#contact">Contact</a>
-            </nav>
-          </details>
-        </header>
 
         <p className="hero-kicker">Singer · Recording artist · Live performer</p>
         <p className="scroll-cue" aria-hidden="true">
