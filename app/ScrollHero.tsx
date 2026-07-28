@@ -21,8 +21,14 @@ export function ScrollHero() {
       const progress = reducedMotion
         ? 0
         : Math.min(1, Math.max(0, -rect.top / travel));
+      const mobile = window.innerWidth <= 900;
+      const imagePosition = (mobile ? 45 : 40) - progress * (mobile ? 12 : 14);
 
       stage.style.setProperty("--hero-progress", progress.toFixed(4));
+      stage.style.setProperty(
+        "--hero-image-position",
+        `${imagePosition.toFixed(2)}%`,
+      );
     };
 
     const requestUpdate = () => {
