@@ -51,7 +51,9 @@ test("preserves the existing landing experience at /weddings", async () => {
   assert.match(html, /Music rooted in meaning/);
   assert.match(html, /Music for the/);
   assert.match(html, /Planning a wedding/);
-  assert.match(html, /aharon-berk-singing-1\.png/);
+  assert.match(html, /aharon-berk-singing-1\.webp/);
+  assert.match(html, /aharon-berk-singing-1\.jpg/);
+  assert.doesNotMatch(html, /aharon-berk-singing-1\.png/);
   assert.match(html, /\/brand\/aharon\.svg/);
   assert.match(html, /\/brand\/berk\.svg/);
 });
