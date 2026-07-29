@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1000" viewBox="0 0 1500 1000" preserveAspectRatio="none">
+  <defs>
+    <!-- Opaque black to the right, fading out over a long, soft leading edge. -->
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0.000" stop-color="#000" stop-opacity="0" />
+      <stop offset="0.059" stop-color="#000" stop-opacity="0" />
+      <stop offset="0.110" stop-color="#000" stop-opacity="0.14" />
+      <stop offset="0.160" stop-color="#000" stop-opacity="0.36" />
+      <stop offset="0.210" stop-color="#000" stop-opacity="0.6" />
+      <stop offset="0.260" stop-color="#000" stop-opacity="0.82" />
+      <stop offset="0.290" stop-color="#000" stop-opacity="0.94" />
+      <stop offset="0.312" stop-color="#000" stop-opacity="1" />
+      <stop offset="1.000" stop-color="#000" stop-opacity="1" />
+    </linearGradient>
+    <!-- Draws the edge out into long bristle streaks, then softens them. -->
+    <filter id="bristle" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.0011 0.0075" numOctaves="3" seed="9" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="140" xChannelSelector="R" yChannelSelector="G" />
+      <feGaussianBlur stdDeviation="16 4" />
+    </filter>
+  </defs>
+  <g filter="url(#bristle)">
+    <rect x="-100" y="-200" width="1700" height="1400" fill="url(#edge)" />
+  </g>
+</svg>

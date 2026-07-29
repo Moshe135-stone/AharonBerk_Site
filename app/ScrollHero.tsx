@@ -1,37 +1,20 @@
 "use client";
 
-import type { PointerEvent as ReactPointerEvent } from "react";
 import { useEffect, useRef } from "react";
 
 export function ScrollHero() {
   const stageRef = useRef<HTMLElement>(null);
-  const wordmarkRef = useRef<HTMLAnchorElement>(null);
+  const heroImageRef = useRef<HTMLImageElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
 
-  const moveLogoFlare = (event: ReactPointerEvent<HTMLAnchorElement>) => {
-    const bounds = event.currentTarget.getBoundingClientRect();
-    const scaleX = event.currentTarget.offsetWidth / bounds.width;
-    const scaleY = event.currentTarget.offsetHeight / bounds.height;
-    event.currentTarget.setAttribute("data-flare-active", "");
-    event.currentTarget.style.setProperty(
-      "--flare-x",
-      `${(event.clientX - bounds.left) * scaleX}px`,
-    );
-    event.currentTarget.style.setProperty(
-      "--flare-y",
-      `${(event.clientY - bounds.top) * scaleY}px`,
-    );
+  const startPaintReveal = () => {
+    stickyRef.current?.setAttribute("data-painted", "");
   };
 
-  const stopLogoFlare = (event: ReactPointerEvent<HTMLAnchorElement>) => {
-    event.currentTarget.removeAttribute("data-flare-active");
-  };
-
-  const clearLogoFlareOutside = (event: ReactPointerEvent<HTMLElement>) => {
-    const wordmark = wordmarkRef.current;
-    if (wordmark && !wordmark.contains(event.target as Node)) {
-      wordmark.removeAttribute("data-flare-active");
-    }
-  };
+  useEffect(() => {
+    // A cached image can finish loading before hydration, so onLoad never fires.
+    if (heroImageRef.current?.complete) startPaintReveal();
+  }, []);
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -50,7 +33,9 @@ export function ScrollHero() {
         ? 0
         : Math.min(1, Math.max(0, -rect.top / travel));
       const mobile = window.innerWidth <= 900;
-      const imagePosition = (mobile ? 45 : 40) - progress * (mobile ? 12 : 14);
+      // Lands at 28%, which clears his whole head below the wordmark on every
+      // desktop aspect, then drifts down the photo as the page scrolls.
+      const imagePosition = (mobile ? 30 : 28) + progress * 22;
 
       stage.style.setProperty("--hero-progress", progress.toFixed(4));
       stage.style.setProperty(
@@ -75,12 +60,7 @@ export function ScrollHero() {
   }, []);
 
   return (
-    <section
-      className="hero-scroll-stage"
-      id="top"
-      ref={stageRef}
-      onPointerMove={clearLogoFlareOutside}
-    >
+    <section className="hero-scroll-stage" id="top" ref={stageRef}>
       <header className="site-header">
         <nav className="hero-nav hero-nav-left" aria-label="Music navigation">
           <a href="#music">
@@ -94,11 +74,7 @@ export function ScrollHero() {
         <a
           className="animated-wordmark"
           href="#top"
-          ref={wordmarkRef}
           aria-label="Aharon Berk home"
-          onPointerEnter={moveLogoFlare}
-          onPointerLeave={stopLogoFlare}
-          onPointerMove={moveLogoFlare}
         >
           <img src="/brand/aharon.svg" alt="" width="497" height="93" />
           <img src="/brand/berk.svg" alt="" width="297" height="93" />
@@ -127,7 +103,7 @@ export function ScrollHero() {
         </details>
       </header>
 
-      <div className="hero-sticky">
+      <div className="hero-sticky" ref={stickyRef}>
         <img
           className="hero-background"
           src="/brand/aharon-berk-singing-1.png"
@@ -135,10 +111,14 @@ export function ScrollHero() {
           width="1800"
           height="2700"
           fetchPriority="high"
+          ref={heroImageRef}
+          onLoad={startPaintReveal}
         />
         <div className="hero-shade" aria-hidden="true" />
 
-        <p className="hero-kicker">Singer · Recording artist · Live performer</p>
+        <p className="hero-kicker">
+          Singer · Recording artist · Live performer
+        </p>
         <p className="scroll-cue" aria-hidden="true">
           Scroll to explore <span />
         </p>
