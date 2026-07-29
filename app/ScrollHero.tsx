@@ -21,26 +21,36 @@ export function ScrollHero() {
     if (!stage) return;
 
     let frame = 0;
+    let stageTop = 0;
+    let travel = 1;
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+    const isWebKit =
+      /AppleWebKit/i.test(navigator.userAgent) &&
+      !/(Chrome|Chromium|Edg|OPR|Android)/i.test(navigator.userAgent);
+
+    if (isWebKit) stage.setAttribute("data-webkit", "");
+
+    const measure = () => {
+      stageTop = stage.offsetTop;
+      travel = Math.max(stage.offsetHeight - window.innerHeight, 1);
+    };
 
     const updateProgress = () => {
       frame = 0;
-      const rect = stage.getBoundingClientRect();
-      const travel = Math.max(stage.offsetHeight - window.innerHeight, 1);
       const progress = reducedMotion
         ? 0
-        : Math.min(1, Math.max(0, -rect.top / travel));
+        : Math.min(1, Math.max(0, (window.scrollY - stageTop) / travel));
       const mobile = window.innerWidth <= 900;
-      // Lands at 28%, which clears his whole head below the wordmark on every
-      // desktop aspect, then drifts down the photo as the page scrolls.
-      const imagePosition = (mobile ? 30 : 28) + progress * 22;
+      const imageShift = reducedMotion
+        ? 0
+        : -progress * window.innerHeight * (mobile ? 0.12 : 0.14);
 
       stage.style.setProperty("--hero-progress", progress.toFixed(4));
       stage.style.setProperty(
-        "--hero-image-position",
-        `${imagePosition.toFixed(2)}%`,
+        "--hero-image-shift",
+        `${imageShift.toFixed(1)}px`,
       );
     };
 
@@ -48,13 +58,19 @@ export function ScrollHero() {
       if (!frame) frame = window.requestAnimationFrame(updateProgress);
     };
 
+    const handleResize = () => {
+      measure();
+      requestUpdate();
+    };
+
+    measure();
     updateProgress();
     window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate);
+    window.addEventListener("resize", handleResize);
 
     return () => {
       window.removeEventListener("scroll", requestUpdate);
-      window.removeEventListener("resize", requestUpdate);
+      window.removeEventListener("resize", handleResize);
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
@@ -104,16 +120,33 @@ export function ScrollHero() {
       </header>
 
       <div className="hero-sticky" ref={stickyRef}>
-        <img
-          className="hero-background"
-          src="/brand/aharon-berk-singing-1.png"
-          alt="Aharon Berk singing into a microphone"
-          width="1800"
-          height="2700"
-          fetchPriority="high"
-          ref={heroImageRef}
-          onLoad={startPaintReveal}
-        />
+        <picture className="hero-picture">
+          <source
+            media="(max-width: 900px)"
+            srcSet="/brand/aharon-berk-singing-1-mobile.webp"
+            type="image/webp"
+          />
+          <source
+            media="(max-width: 900px)"
+            srcSet="/brand/aharon-berk-singing-1-mobile.jpg"
+            type="image/jpeg"
+          />
+          <source
+            srcSet="/brand/aharon-berk-singing-1.webp"
+            type="image/webp"
+          />
+          <img
+            className="hero-background"
+            src="/brand/aharon-berk-singing-1.jpg"
+            alt="Aharon Berk singing into a microphone"
+            width="1800"
+            height="2700"
+            decoding="async"
+            fetchPriority="high"
+            ref={heroImageRef}
+            onLoad={startPaintReveal}
+          />
+        </picture>
         <div className="hero-shade" aria-hidden="true" />
 
         <p className="hero-kicker">

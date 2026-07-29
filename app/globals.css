@@ -334,8 +334,8 @@ h3 {
     rgba(0, 0, 0, 0.1) 93%,
     transparent 100%
   );
-  -webkit-backdrop-filter: blur(26px) brightness(0.44) saturate(0.42);
-  backdrop-filter: blur(26px) brightness(0.44) saturate(0.42);
+  -webkit-backdrop-filter: blur(18px) brightness(0.5) saturate(0.5);
+  backdrop-filter: blur(18px) brightness(0.5) saturate(0.5);
   content: "";
   -webkit-mask-image: linear-gradient(
     to bottom,
@@ -504,7 +504,7 @@ footer nav a:hover {
 
 .hero-scroll-stage {
   --hero-progress: 0;
-  --hero-image-position: 28%;
+  --hero-image-shift: 0px;
   --nav-height: 8rem;
   position: relative;
   height: 265svh;
@@ -520,18 +520,25 @@ footer nav a:hover {
   overflow: hidden;
 }
 
-.hero-background {
+.hero-picture {
   position: absolute;
   top: var(--nav-height);
   right: 0;
   left: 0;
   width: 100%;
-  height: calc(112% - 5rem);
-  object-fit: cover;
-  object-position: center var(--hero-image-position);
-  transform: scale(1.045);
+  height: calc(125% - 5rem);
+  overflow: hidden;
+  transform: translate3d(0, var(--hero-image-shift), 0) scale(1.045);
   transform-origin: center center;
   will-change: transform;
+}
+
+.hero-background {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 28%;
 }
 
 /*
@@ -556,6 +563,34 @@ footer nav a:hover {
 .hero-sticky[data-painted]::after {
   animation: hero-paint-reveal 2.1s cubic-bezier(0.22, 0.68, 0.24, 1) 0.1s
     forwards;
+}
+
+/*
+ * WebKit has a much higher cost for combining a full-viewport SVG filter,
+ * backdrop blur and a moving hero layer. Keep the feathered black header but
+ * avoid those two filtered compositor surfaces in Safari.
+ */
+.hero-scroll-stage[data-webkit] .site-header::before {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.94) 0%,
+    rgba(0, 0, 0, 0.88) 46%,
+    rgba(0, 0, 0, 0.68) 64%,
+    rgba(0, 0, 0, 0.36) 80%,
+    rgba(0, 0, 0, 0.12) 92%,
+    transparent 100%
+  );
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.hero-scroll-stage[data-webkit] .hero-sticky::after {
+  display: none;
+  animation: none;
+}
+
+.hero-scroll-stage[data-webkit] .hero-nav a span {
+  filter: none;
 }
 
 .eyebrow {
@@ -1298,18 +1333,20 @@ footer nav {
   }
 
   .hero-scroll-stage {
-    --hero-image-position: 30%;
     --nav-height: 6.25rem;
     height: 240svh;
   }
 
-  .hero-background {
+  .hero-picture {
     top: var(--nav-height);
     right: 0;
     left: 0;
-    height: calc(110% - 3rem);
-    object-position: 54% var(--hero-image-position);
-    transform: scale(1.04);
+    height: calc(122% - 3rem);
+    transform: translate3d(0, var(--hero-image-shift), 0) scale(1.04);
+  }
+
+  .hero-background {
+    object-position: 54% 30%;
   }
 
   .hero-shade {
