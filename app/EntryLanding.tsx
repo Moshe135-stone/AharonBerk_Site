@@ -31,21 +31,29 @@ export function EntryLanding() {
   return (
     <main className="entry-landing" data-active={activeChoice}>
       <div className="entry-image entry-image-wedding" aria-hidden="true">
-        <img
-          src="/entry/wedding-canopy.png"
-          alt=""
-          width="1536"
-          height="1024"
-          fetchPriority="high"
-        />
+        <picture>
+          <source srcSet="/entry/aharon-image-6.webp" type="image/webp" />
+          <img
+            src="/entry/aharon-image-6.jpg"
+            alt=""
+            width="1600"
+            height="1179"
+            decoding="async"
+            fetchPriority="high"
+          />
+        </picture>
       </div>
       <div className="entry-image entry-image-music" aria-hidden="true">
-        <img
-          src="/entry/stacked-vinyl.png"
-          alt=""
-          width="1536"
-          height="1024"
-        />
+        <picture>
+          <source srcSet="/entry/aharon-image-5.webp" type="image/webp" />
+          <img
+            src="/entry/aharon-image-5.jpg"
+            alt=""
+            width="1600"
+            height="1064"
+            decoding="async"
+          />
+        </picture>
       </div>
       <div className="entry-vignette" aria-hidden="true" />
 

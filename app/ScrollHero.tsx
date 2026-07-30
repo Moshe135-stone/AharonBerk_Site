@@ -2,13 +2,33 @@
 
 import { useEffect, useRef } from "react";
 
+const heroIntroduction =
+  "Aharon Berk is a Jewish singer, recording artist and live performer, creating original music and leading Chuppas, Horas and wedding celebrations in South Africa and internationally.";
+const heroIntroductionWords = heroIntroduction.split(" ");
+const heroLocation =
+  "Based in Johannesburg. Available in Cape Town, across South Africa and internationally.";
+const heroLocationWords = heroLocation.split(" ");
+
 export function ScrollHero() {
   const stageRef = useRef<HTMLElement>(null);
   const heroImageRef = useRef<HTMLImageElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
+  const introRef = useRef<HTMLParagraphElement>(null);
+  const locationRef = useRef<HTMLParagraphElement>(null);
+  const visibleWordCountRef = useRef(-1);
+  const visibleLocationWordCountRef = useRef(-1);
 
   const startPaintReveal = () => {
-    stickyRef.current?.setAttribute("data-painted", "");
+    const sticky = stickyRef.current;
+    if (!sticky || sticky.hasAttribute("data-painted")) return;
+
+    sticky.setAttribute("data-painted", "");
+
+    // Tear the curtain layer down once it has swept off screen. animationend
+    // from a pseudo-element is not reliable everywhere, so time it out instead.
+    window.setTimeout(() => {
+      sticky.setAttribute("data-reveal-done", "");
+    }, 2600);
   };
 
   useEffect(() => {
@@ -23,6 +43,10 @@ export function ScrollHero() {
     let frame = 0;
     let stageTop = 0;
     let travel = 1;
+    const introductionWords =
+      introRef.current?.querySelectorAll<HTMLElement>(".hero-intro-word");
+    const locationWords =
+      locationRef.current?.querySelectorAll<HTMLElement>(".hero-location-word");
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
@@ -46,12 +70,59 @@ export function ScrollHero() {
       const imageShift = reducedMotion
         ? 0
         : -progress * window.innerHeight * (mobile ? 0.12 : 0.14);
+      const introductionProgress = Math.min(
+        1,
+        Math.max(0, (progress - 0.05) / 0.3),
+      );
+      const introductionExit = Math.min(
+        1,
+        Math.max(0, (progress - 0.4) / 0.1),
+      );
+      const visibleWordCount = reducedMotion
+        ? heroIntroductionWords.length
+        : Math.floor(
+            introductionProgress * (heroIntroductionWords.length + 1),
+          );
+      const locationProgress = Math.min(
+        1,
+        Math.max(0, (progress - 0.52) / 0.2),
+      );
+      const visibleLocationWordCount = reducedMotion
+        ? heroLocationWords.length
+        : Math.floor(locationProgress * (heroLocationWords.length + 1));
 
       stage.style.setProperty("--hero-progress", progress.toFixed(4));
+      stage.style.setProperty(
+        "--hero-intro-exit",
+        reducedMotion ? "0" : introductionExit.toFixed(4),
+      );
       stage.style.setProperty(
         "--hero-image-shift",
         `${imageShift.toFixed(1)}px`,
       );
+
+      if (
+        introductionWords &&
+        visibleWordCount !== visibleWordCountRef.current
+      ) {
+        introductionWords.forEach((word, index) => {
+          word.classList.toggle("is-visible", index < visibleWordCount);
+        });
+        visibleWordCountRef.current = visibleWordCount;
+      }
+
+      if (
+        locationWords &&
+        visibleLocationWordCount !== visibleLocationWordCountRef.current
+      ) {
+        locationWords.forEach((word, index) => {
+          word.classList.toggle(
+            "is-visible",
+            index < visibleLocationWordCount,
+          );
+        });
+        visibleLocationWordCountRef.current = visibleLocationWordCount;
+      }
     };
 
     const requestUpdate = () => {
@@ -149,11 +220,31 @@ export function ScrollHero() {
         </picture>
         <div className="hero-shade" aria-hidden="true" />
 
-        <p className="hero-kicker">
-          Singer · Recording artist · Live performer
+        <p
+          className="hero-intro"
+          aria-label={heroIntroduction}
+          ref={introRef}
+        >
+          {heroIntroductionWords.map((word, index) => (
+            <span
+              className="hero-intro-word"
+              aria-hidden="true"
+              key={`${word}-${index}`}
+            >
+              {word}
+            </span>
+          ))}
         </p>
-        <p className="scroll-cue" aria-hidden="true">
-          Scroll to explore <span />
+        <p className="hero-location" aria-label={heroLocation} ref={locationRef}>
+          {heroLocationWords.map((word, index) => (
+            <span
+              className="hero-location-word"
+              aria-hidden="true"
+              key={`${word}-${index}`}
+            >
+              {word}
+            </span>
+          ))}
         </p>
       </div>
     </section>

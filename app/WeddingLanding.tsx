@@ -1,10 +1,7 @@
 import { ScrollHero } from "./ScrollHero";
-
-const releases = [
-  { title: "V’erastich Li", type: "Original release", number: "01" },
-  { title: "40 Days", type: "Selected song", number: "02" },
-  { title: "Nafsheinu", type: "Selected song", number: "03" },
-];
+import { MusicFeature } from "./MusicFeature";
+import { ReleaseCarousel } from "./ReleaseCarousel";
+import { musicReleases } from "./content/releases";
 
 const weddingSteps = [
   ["01", "Send the date and venue", "Share the wedding date, venue and city or country."],
@@ -62,63 +59,9 @@ export default function WeddingLanding() {
     <main>
       <ScrollHero />
 
-      <section className="manifesto">
-        <p>Rooted in meaning.</p>
-        <p>Alive in the moment.</p>
-        <p>Made to be felt.</p>
-      </section>
+      <MusicFeature />
 
-      <section className="music section-pad" id="music">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Selected music</p>
-            <h2>Music rooted in meaning</h2>
-          </div>
-          <p>
-            Aharon’s songs draw on tefillah, Jewish life and personal emotion,
-            with a sound that is contemporary while remaining rooted in
-            tradition.
-          </p>
-        </div>
-
-        <div className="featured-release">
-          <PhotoPlaceholder
-            label="Latest release artwork"
-            className="release-art"
-          />
-          <div className="release-copy">
-            <p className="eyebrow">Featured release · Placeholder</p>
-            <h3>Latest release title</h3>
-            <p>
-              Add a short, approved introduction to the newest song here,
-              together with exact artist credits and live platform links.
-            </p>
-            <div className="button-row">
-              <a className="button button-dark" href="#contact">
-                Listen <span aria-hidden="true">↗</span>
-              </a>
-              <a className="text-link" href="#contact">
-                Watch <span aria-hidden="true">→</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div className="release-list" aria-label="Selected releases">
-          {releases.map((release) => (
-            <article className="release-row" key={release.title}>
-              <span className="release-number">{release.number}</span>
-              <div>
-                <h3>{release.title}</h3>
-                <p>{release.type}</p>
-              </div>
-              <a href="#contact" aria-label={`Listen to ${release.title}`}>
-                Listen <span aria-hidden="true">↗</span>
-              </a>
-            </article>
-          ))}
-        </div>
-      </section>
+      <ReleaseCarousel releases={musicReleases} />
 
       <section className="weddings" id="weddings">
         <div className="wedding-image">
