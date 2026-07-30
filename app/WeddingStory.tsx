@@ -63,9 +63,11 @@ export function WeddingStory() {
       const copyPosition = clamp((progress - 0.24) / 0.58) * 2;
       const finalProgress = clamp((progress - 0.76) / 0.14);
       const compactLayout = window.innerWidth <= 700;
-      const startX = compactLayout ? 24 : window.innerWidth * 0.16;
+      const startX = compactLayout
+        ? Math.max(24, (window.innerWidth - 116) / 2)
+        : window.innerWidth * 0.26;
       const endX = compactLayout ? 24 : window.innerWidth * 0.06;
-      const startY = window.innerHeight * (compactLayout ? 0.22 : 0.28);
+      const startY = window.innerHeight * (compactLayout ? 0.3 : 0.38);
       const endY = window.innerHeight * (compactLayout ? 0.1 : 0.14);
 
       sticky.style.setProperty(
