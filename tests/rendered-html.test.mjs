@@ -51,7 +51,10 @@ test("preserves the existing landing experience at /weddings", async () => {
 
   const html = await response.text();
   assert.match(html, /Music rooted in.*meaning/i);
-  assert.match(html, /Music for the/);
+  assert.match(html, /Aharon Berk in collaboration with Azamra/);
+  assert.match(html, /Through Azamra/);
+  assert.match(html, /Chuppas:/);
+  assert.match(html, /Horas and receptions:/);
   assert.match(html, /Planning a wedding/);
   assert.match(html, /Aharon Berk is a Jewish singer/);
   assert.match(html, /Based in Johannesburg/);
@@ -61,6 +64,9 @@ test("preserves the existing landing experience at /weddings", async () => {
   assert.doesNotMatch(html, /aharon-berk-singing-1\.png/);
   assert.match(html, /\/brand\/aharon\.svg/);
   assert.match(html, /\/brand\/berk\.svg/);
+  assert.match(html, /\/weddings\/canopy-bg\.webp/);
+  assert.match(html, /\/weddings\/canopy-bg\.png/);
+  assert.doesNotMatch(html, /\/weddings\/chuppah-cutout\.(?:webp|png)/);
   assert.match(html, /\/music\/covers\/40-days\.webp/);
   assert.match(html, /\/music\/covers\/nafsheinu\.webp/);
   assert.match(html, /\/music\/covers\/piha-pascha\.webp/);

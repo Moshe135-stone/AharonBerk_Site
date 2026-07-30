@@ -5,8 +5,6 @@ import {
   useRef,
   useState,
   type KeyboardEvent,
-  type MouseEvent,
-  type PointerEvent as ReactPointerEvent,
   type UIEvent,
 } from "react";
 import type { MusicRelease } from "./content/releases";
@@ -83,14 +81,7 @@ export function ReleaseCarousel({
   const sectionRef = useRef<HTMLElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const scrollFrameRef = useRef(0);
-  const suppressClickUntilRef = useRef(0);
-  const dragRef = useRef({
-    active: false,
-    moved: false,
-    pointerId: -1,
-    startScrollLeft: 0,
-    startX: 0,
-  });
+  const activeIndexRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -98,31 +89,63 @@ export function ReleaseCarousel({
     const section = sectionRef.current;
     if (!viewport || !section) return;
 
-    const handleWheel = (event: WheelEvent) => {
-      const delta =
-        Math.abs(event.deltaX) > Math.abs(event.deltaY)
-          ? event.deltaX
-          : event.deltaY;
-      const atStart = viewport.scrollLeft <= 1;
-      const atEnd =
-        viewport.scrollLeft + viewport.clientWidth >=
-        viewport.scrollWidth - 1;
+    let gestureEndTimer = 0;
 
-      if ((delta < 0 && atStart) || (delta > 0 && atEnd)) return;
+    const settleOnNearestRelease = () => {
+      window.clearTimeout(gestureEndTimer);
+      gestureEndTimer = window.setTimeout(() => {
+        section.classList.remove("is-wheel-scrolling");
+        const nextIndex = Math.min(
+          releases.length - 1,
+          Math.max(
+            0,
+            Math.round(viewport.scrollLeft / viewport.clientWidth),
+          ),
+        );
+
+        activeIndexRef.current = nextIndex;
+        setActiveIndex(nextIndex);
+        viewport.scrollTo({
+          left: nextIndex * viewport.clientWidth,
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
+            .matches
+            ? "auto"
+            : "smooth",
+        });
+      }, 110);
+    };
+
+    const handleWheel = (event: WheelEvent) => {
+      const horizontalIntent =
+        Math.abs(event.deltaX) >= 0.5 &&
+        Math.abs(event.deltaX) > Math.abs(event.deltaY) * 0.55;
+      if (!horizontalIntent) return;
 
       event.preventDefault();
-      viewport.scrollLeft += delta;
+      section.classList.add("is-wheel-scrolling");
+
+      const deltaMultiplier =
+        event.deltaMode === WheelEvent.DOM_DELTA_LINE
+          ? 18
+          : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+            ? viewport.clientWidth
+            : 1.2;
+
+      viewport.scrollLeft += event.deltaX * deltaMultiplier;
+      settleOnNearestRelease();
     };
 
     section.addEventListener("wheel", handleWheel, { passive: false });
 
     return () => {
       section.removeEventListener("wheel", handleWheel);
+      window.clearTimeout(gestureEndTimer);
+      section.classList.remove("is-wheel-scrolling");
       if (scrollFrameRef.current) {
         window.cancelAnimationFrame(scrollFrameRef.current);
       }
     };
-  }, []);
+  }, [releases.length]);
 
   const moveTo = (index: number) => {
     const viewport = viewportRef.current;
@@ -138,6 +161,7 @@ export function ReleaseCarousel({
       left: nextIndex * viewport.clientWidth,
       behavior: reducedMotion ? "auto" : "smooth",
     });
+    activeIndexRef.current = nextIndex;
     setActiveIndex(nextIndex);
   };
 
@@ -151,6 +175,7 @@ export function ReleaseCarousel({
         releases.length - 1,
         Math.max(0, Math.round(viewport.scrollLeft / viewport.clientWidth)),
       );
+      activeIndexRef.current = nextIndex;
       setActiveIndex(nextIndex);
     });
   };
@@ -166,101 +191,22 @@ export function ReleaseCarousel({
     }
   };
 
-  const handlePointerDown = (event: ReactPointerEvent<HTMLElement>) => {
-    if (event.pointerType === "mouse" && event.button !== 0) return;
-
-    const viewport = viewportRef.current;
-    if (!viewport) return;
-
-    dragRef.current = {
-      active: true,
-      moved: false,
-      pointerId: event.pointerId,
-      startScrollLeft: viewport.scrollLeft,
-      startX: event.clientX,
-    };
-    event.currentTarget.setPointerCapture(event.pointerId);
-  };
-
-  const handlePointerMove = (event: ReactPointerEvent<HTMLElement>) => {
-    const drag = dragRef.current;
-    const viewport = viewportRef.current;
-    if (!drag.active || drag.pointerId !== event.pointerId || !viewport) {
-      return;
-    }
-
-    const distance = event.clientX - drag.startX;
-    if (!drag.moved && Math.abs(distance) > 5) {
-      drag.moved = true;
-      sectionRef.current?.classList.add("is-dragging");
-    }
-    if (!drag.moved) return;
-
-    event.preventDefault();
-    viewport.scrollLeft = drag.startScrollLeft - distance;
-  };
-
-  const finishPointerDrag = (event: ReactPointerEvent<HTMLElement>) => {
-    const drag = dragRef.current;
-    const viewport = viewportRef.current;
-    if (!drag.active || drag.pointerId !== event.pointerId || !viewport) {
-      return;
-    }
-
-    drag.active = false;
-    sectionRef.current?.classList.remove("is-dragging");
-
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-
-    if (drag.moved) {
-      suppressClickUntilRef.current = Date.now() + 350;
-      moveTo(Math.round(viewport.scrollLeft / viewport.clientWidth));
-    }
-  };
-
-  const suppressClickAfterDrag = (event: MouseEvent<HTMLElement>) => {
-    if (Date.now() >= suppressClickUntilRef.current) return;
-
-    event.preventDefault();
-    event.stopPropagation();
-  };
-
   return (
     <section
       className="release-carousel"
       id="music-catalog"
       aria-label="Music releases"
       aria-roledescription="carousel"
-      onClickCapture={suppressClickAfterDrag}
-      onPointerCancel={finishPointerDrag}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={finishPointerDrag}
       ref={sectionRef}
     >
-      <div className="release-carousel-indicators" aria-label="Choose a release">
+      <div className="release-carousel-indicators" aria-hidden="true">
         {releases.map((release, index) => (
-          <button
-            type="button"
+          <span
             className={index === activeIndex ? "is-active" : undefined}
-            aria-label={`Show ${release.title}`}
-            aria-current={index === activeIndex ? "true" : undefined}
             key={release.id}
-            onClick={() => moveTo(index)}
           />
         ))}
       </div>
-
-      <button
-        className="release-carousel-arrow release-carousel-arrow-left"
-        type="button"
-        aria-label="Previous release"
-        onClick={() => moveTo(activeIndex - 1)}
-      >
-        ←
-      </button>
 
       <div
         className="release-carousel-viewport"
@@ -281,17 +227,8 @@ export function ReleaseCarousel({
         </div>
       </div>
 
-      <button
-        className="release-carousel-arrow release-carousel-arrow-right"
-        type="button"
-        aria-label="Next release"
-        onClick={() => moveTo(activeIndex + 1)}
-      >
-        →
-      </button>
-
       <p className="release-carousel-hint">
-        Scroll, swipe or use the arrow keys
+        Swipe or scroll left / right
       </p>
     </section>
   );
