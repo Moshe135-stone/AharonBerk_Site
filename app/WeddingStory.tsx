@@ -61,14 +61,14 @@ export function WeddingStory() {
       const collaborationProgress = clamp(progress / 0.18);
       const copyReveal = clamp((progress - 0.14) / 0.08);
       const copyPosition = clamp((progress - 0.24) / 0.58) * 2;
-      const finalProgress = clamp((progress - 0.76) / 0.14);
       const compactLayout = window.innerWidth <= 700;
       const startX = compactLayout
-        ? Math.max(24, (window.innerWidth - 116) / 2)
-        : window.innerWidth * 0.26;
-      const endX = compactLayout ? 24 : window.innerWidth * 0.06;
-      const startY = window.innerHeight * (compactLayout ? 0.3 : 0.38);
-      const endY = window.innerHeight * (compactLayout ? 0.1 : 0.14);
+        ? Math.max(24, (window.innerWidth - 160) / 2)
+        : window.innerWidth * 0.24;
+      const endX = compactLayout ? 8 : window.innerWidth * 0.1;
+      const startY = window.innerHeight * (compactLayout ? 0.34 : 0.42);
+      const endY = window.innerHeight * (compactLayout ? 0.32 : 0.38);
+      const compactScale = compactLayout ? 0.72 : 0.44;
 
       sticky.style.setProperty(
         "--wedding-collab-x",
@@ -80,21 +80,15 @@ export function WeddingStory() {
       );
       sticky.style.setProperty(
         "--wedding-collab-scale",
-        (1 - collaborationProgress * 0.35).toFixed(4),
+        (
+          1 -
+          collaborationProgress * (1 - compactScale)
+        ).toFixed(4),
       );
       sticky.style.setProperty(
         "--wedding-collab-opacity",
-        (1 - finalProgress).toFixed(4),
+        "1",
       );
-      sticky.style.setProperty(
-        "--wedding-line-top",
-        `${(1 - finalProgress) * 40}vh`,
-      );
-      sticky.style.setProperty(
-        "--wedding-line-opacity",
-        copyReveal.toFixed(4),
-      );
-
       copyRefs.current.forEach((item, index) => {
         if (!item) {
           return;
@@ -107,10 +101,22 @@ export function WeddingStory() {
             ? Math.max(0, 1 - distance * 1.55)
             : Math.max(0, 1 - distance * 0.88);
 
-        item.style.setProperty("--wedding-item-y", `${delta * 44}vh`);
+        const visualOpacity = opacity * copyReveal;
+
+        const finalCopyOffset =
+          index === storyCopy.length - 1 ? -10 : 0;
+
+        item.style.setProperty(
+          "--wedding-item-y",
+          `${delta * 44 + finalCopyOffset}vh`,
+        );
         item.style.setProperty(
           "--wedding-item-opacity",
-          (opacity * copyReveal).toFixed(4),
+          visualOpacity.toFixed(4),
+        );
+        item.style.setProperty(
+          "--wedding-item-blur",
+          `${(1 - visualOpacity) * 5}px`,
         );
       });
     };
@@ -170,8 +176,6 @@ export function WeddingStory() {
           </span>
         </div>
 
-        <span className="wedding-story-line" aria-hidden="true" />
-
         <div className="wedding-story-copy-window">
           {storyCopy.map((copy, index) => (
             <p
@@ -185,6 +189,10 @@ export function WeddingStory() {
             </p>
           ))}
         </div>
+
+        <a className="wedding-story-explore" href="#music-catalog">
+          Explore the music <span aria-hidden="true">⟶</span>
+        </a>
       </div>
     </section>
   );

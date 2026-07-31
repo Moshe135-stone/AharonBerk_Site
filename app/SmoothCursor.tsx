@@ -47,6 +47,10 @@ export function SmoothCursor() {
       const element =
         event.target instanceof Element ? event.target : undefined;
       cursor.toggleAttribute(
+        "data-light-surface",
+        Boolean(element?.closest(".wedding-story")),
+      );
+      cursor.toggleAttribute(
         "data-hover",
         Boolean(
           element?.closest(
@@ -60,6 +64,7 @@ export function SmoothCursor() {
       if (!event.relatedTarget) {
         cursor.removeAttribute("data-visible");
         cursor.removeAttribute("data-hover");
+        cursor.removeAttribute("data-light-surface");
         hasPosition = false;
       }
     };

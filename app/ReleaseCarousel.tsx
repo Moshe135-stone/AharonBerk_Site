@@ -5,7 +5,6 @@ import {
   useRef,
   useState,
   type KeyboardEvent,
-  type UIEvent,
 } from "react";
 import type { MusicRelease } from "./content/releases";
 
@@ -13,14 +12,16 @@ function ReleaseSlide({
   release,
   index,
   total,
+  isActive,
 }: {
   release: MusicRelease;
   index: number;
   total: number;
+  isActive: boolean;
 }) {
   return (
     <article
-      className="release-carousel-slide"
+      className={`release-carousel-slide ${isActive ? "is-active" : ""}`}
       aria-label={`${index + 1} of ${total}: ${release.title}`}
       data-release-id={release.id}
     >
@@ -55,18 +56,30 @@ function ReleaseSlide({
           <strong>{release.format}</strong>
         </div>
 
-        <h2>{release.title}</h2>
-        <p>{release.description}</p>
+        <div className="release-carousel-details" aria-hidden={!isActive}>
+          <h2>{release.title}</h2>
+          <p>{release.description}</p>
 
-        <div className="release-carousel-actions">
-          <a href={release.links.listen} target="_blank" rel="noreferrer">
-            Listen <span aria-hidden="true">⟶</span>
-          </a>
-          {release.links.watch ? (
-            <a href={release.links.watch} target="_blank" rel="noreferrer">
-              Watch now <span aria-hidden="true">⟶</span>
+          <div className="release-carousel-actions">
+            <a
+              href={release.links.listen}
+              target="_blank"
+              rel="noreferrer"
+              tabIndex={isActive ? undefined : -1}
+            >
+              Listen <span aria-hidden="true">⟶</span>
             </a>
-          ) : null}
+            {release.links.watch ? (
+              <a
+                href={release.links.watch}
+                target="_blank"
+                rel="noreferrer"
+                tabIndex={isActive ? undefined : -1}
+              >
+                Watch now <span aria-hidden="true">⟶</span>
+              </a>
+            ) : null}
+          </div>
         </div>
       </div>
     </article>
@@ -80,7 +93,6 @@ export function ReleaseCarousel({
 }) {
   const sectionRef = useRef<HTMLElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
-  const scrollFrameRef = useRef(0);
   const activeIndexRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -89,12 +101,13 @@ export function ReleaseCarousel({
     const section = sectionRef.current;
     if (!viewport || !section) return;
 
-    let gestureEndTimer = 0;
+    let settleTimer = 0;
+    let wheelUnlockTimer = 0;
+    let wheelLocked = false;
 
     const settleOnNearestRelease = () => {
-      window.clearTimeout(gestureEndTimer);
-      gestureEndTimer = window.setTimeout(() => {
-        section.classList.remove("is-wheel-scrolling");
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(() => {
         const nextIndex = Math.min(
           releases.length - 1,
           Math.max(
@@ -105,45 +118,56 @@ export function ReleaseCarousel({
 
         activeIndexRef.current = nextIndex;
         setActiveIndex(nextIndex);
-        viewport.scrollTo({
-          left: nextIndex * viewport.clientWidth,
-          behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
-            .matches
-            ? "auto"
-            : "smooth",
-        });
-      }, 110);
+        wheelLocked = false;
+      }, 150);
+    };
+
+    const handleScroll = () => {
+      setActiveIndex((currentIndex) =>
+        currentIndex === -1 ? currentIndex : -1,
+      );
+      settleOnNearestRelease();
     };
 
     const handleWheel = (event: WheelEvent) => {
       const horizontalIntent =
-        Math.abs(event.deltaX) >= 0.5 &&
+        Math.abs(event.deltaX) >= 0.05 &&
         Math.abs(event.deltaX) > Math.abs(event.deltaY) * 0.55;
       if (!horizontalIntent) return;
 
       event.preventDefault();
-      section.classList.add("is-wheel-scrolling");
+      if (wheelLocked) return;
 
-      const deltaMultiplier =
-        event.deltaMode === WheelEvent.DOM_DELTA_LINE
-          ? 18
-          : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
-            ? viewport.clientWidth
-            : 1.2;
+      const direction = event.deltaX > 0 ? 1 : -1;
+      const nextIndex = Math.min(
+        releases.length - 1,
+        Math.max(0, activeIndexRef.current + direction),
+      );
+      if (nextIndex === activeIndexRef.current) return;
 
-      viewport.scrollLeft += event.deltaX * deltaMultiplier;
-      settleOnNearestRelease();
+      wheelLocked = true;
+      setActiveIndex(-1);
+      viewport.scrollTo({
+        left: nextIndex * viewport.clientWidth,
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "auto"
+          : "smooth",
+      });
+
+      window.clearTimeout(wheelUnlockTimer);
+      wheelUnlockTimer = window.setTimeout(() => {
+        wheelLocked = false;
+      }, 900);
     };
 
     section.addEventListener("wheel", handleWheel, { passive: false });
+    viewport.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
       section.removeEventListener("wheel", handleWheel);
-      window.clearTimeout(gestureEndTimer);
-      section.classList.remove("is-wheel-scrolling");
-      if (scrollFrameRef.current) {
-        window.cancelAnimationFrame(scrollFrameRef.current);
-      }
+      viewport.removeEventListener("scroll", handleScroll);
+      window.clearTimeout(settleTimer);
+      window.clearTimeout(wheelUnlockTimer);
     };
   }, [releases.length]);
 
@@ -151,8 +175,10 @@ export function ReleaseCarousel({
     const viewport = viewportRef.current;
     if (!viewport) return;
 
-    const nextIndex =
-      (index + releases.length) % releases.length;
+    const nextIndex = Math.min(
+      releases.length - 1,
+      Math.max(0, index),
+    );
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
@@ -161,33 +187,17 @@ export function ReleaseCarousel({
       left: nextIndex * viewport.clientWidth,
       behavior: reducedMotion ? "auto" : "smooth",
     });
-    activeIndexRef.current = nextIndex;
-    setActiveIndex(nextIndex);
-  };
-
-  const updateActiveSlide = (event: UIEvent<HTMLDivElement>) => {
-    if (scrollFrameRef.current) return;
-
-    const viewport = event.currentTarget;
-    scrollFrameRef.current = window.requestAnimationFrame(() => {
-      scrollFrameRef.current = 0;
-      const nextIndex = Math.min(
-        releases.length - 1,
-        Math.max(0, Math.round(viewport.scrollLeft / viewport.clientWidth)),
-      );
-      activeIndexRef.current = nextIndex;
-      setActiveIndex(nextIndex);
-    });
+    setActiveIndex(-1);
   };
 
   const handleKeyboard = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "ArrowRight") {
       event.preventDefault();
-      moveTo(activeIndex + 1);
+      moveTo(activeIndexRef.current + 1);
     }
     if (event.key === "ArrowLeft") {
       event.preventDefault();
-      moveTo(activeIndex - 1);
+      moveTo(activeIndexRef.current - 1);
     }
   };
 
@@ -212,7 +222,6 @@ export function ReleaseCarousel({
         className="release-carousel-viewport"
         ref={viewportRef}
         onKeyDown={handleKeyboard}
-        onScroll={updateActiveSlide}
         tabIndex={0}
       >
         <div className="release-carousel-track">
@@ -221,6 +230,7 @@ export function ReleaseCarousel({
               release={release}
               index={index}
               total={releases.length}
+              isActive={index === activeIndex}
               key={release.id}
             />
           ))}

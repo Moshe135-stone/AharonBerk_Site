@@ -11,6 +11,7 @@ const heroLocationWords = heroLocation.split(" ");
 
 export function ScrollHero() {
   const stageRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
   const heroImageRef = useRef<HTMLImageElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLParagraphElement>(null);
@@ -38,7 +39,8 @@ export function ScrollHero() {
 
   useEffect(() => {
     const stage = stageRef.current;
-    if (!stage) return;
+    const header = headerRef.current;
+    if (!stage || !header) return;
 
     let frame = 0;
     let stageTop = 0;
@@ -47,6 +49,7 @@ export function ScrollHero() {
       introRef.current?.querySelectorAll<HTMLElement>(".hero-intro-word");
     const locationWords =
       locationRef.current?.querySelectorAll<HTMLElement>(".hero-location-word");
+    const contactSection = document.getElementById("contact");
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
@@ -101,6 +104,19 @@ export function ScrollHero() {
         `${imageShift.toFixed(1)}px`,
       );
 
+      const contactRect = contactSection?.getBoundingClientRect();
+      const atPageOpening = window.scrollY <= stageTop + 8;
+      const contactIsEntering = Boolean(
+        contactRect &&
+          contactRect.top <= window.innerHeight * 0.82 &&
+          contactRect.bottom > 0,
+      );
+      header.toggleAttribute(
+        "data-socials-visible",
+        atPageOpening || contactIsEntering,
+      );
+      header.toggleAttribute("data-contact-brand", contactIsEntering);
+
       if (
         introductionWords &&
         visibleWordCount !== visibleWordCountRef.current
@@ -148,7 +164,7 @@ export function ScrollHero() {
 
   return (
     <section className="hero-scroll-stage" id="top" ref={stageRef}>
-      <header className="site-header">
+      <header className="site-header" ref={headerRef}>
         <nav className="hero-nav hero-nav-left" aria-label="Music navigation">
           <a href="#music">
             <span>Music</span>
@@ -158,22 +174,64 @@ export function ScrollHero() {
           </a>
         </nav>
 
-        <a
-          className="animated-wordmark"
-          href="#top"
-          aria-label="Aharon Berk home"
-        >
-          <img src="/brand/aharon.svg" alt="" width="497" height="93" />
-          <img src="/brand/berk.svg" alt="" width="297" height="93" />
-        </a>
+        <div className="hero-brand">
+          <a
+            className="animated-wordmark"
+            href="#top"
+            aria-label="Aharon Berk home"
+          >
+            <img src="/brand/aharon.svg" alt="" width="497" height="93" />
+            <img src="/brand/berk.svg" alt="" width="297" height="93" />
+          </a>
+
+          <nav className="hero-socials" aria-label="Aharon Berk on social media">
+            <a
+              href="https://www.youtube.com/channel/UCxAJ-494ZAh1azhFI_j0Krw"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="YouTube"
+            >
+              <img src="/social/youtube.svg" alt="" width="24" height="24" />
+            </a>
+            <a
+              href="https://www.facebook.com/AharonBerk"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Facebook"
+            >
+              <img src="/social/facebook.svg" alt="" width="24" height="24" />
+            </a>
+            <a
+              href="https://www.instagram.com/aharonberk/"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram"
+            >
+              <img src="/social/instagram.svg" alt="" width="24" height="24" />
+            </a>
+            <a
+              href="https://music.apple.com/us/artist/aharon-berk/1521973943"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Apple Music"
+            >
+              <img src="/social/apple-music.svg" alt="" width="24" height="24" />
+            </a>
+            <a
+              href="https://open.spotify.com/artist/2on0c6iQBHGTIn30q7te5Q?si=aBw6EiUFRPaoa9M0yfujMQ"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Spotify"
+            >
+              <img src="/social/spotify.svg" alt="" width="24" height="24" />
+            </a>
+          </nav>
+        </div>
 
         <nav
           className="hero-nav hero-nav-right"
           aria-label="Information navigation"
         >
-          <a href="#about">
-            <span>About</span>
-          </a>
           <a href="#contact">
             <span>Contact</span>
           </a>
@@ -184,7 +242,6 @@ export function ScrollHero() {
           <nav aria-label="Mobile navigation">
             <a href="#music">Music</a>
             <a href="#weddings">Weddings</a>
-            <a href="#about">About</a>
             <a href="#contact">Contact</a>
           </nav>
         </details>
