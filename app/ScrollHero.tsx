@@ -12,6 +12,7 @@ const heroLocationWords = heroLocation.split(" ");
 export function ScrollHero() {
   const stageRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLElement>(null);
+  const mobileMenuRef = useRef<HTMLDetailsElement>(null);
   const heroImageRef = useRef<HTMLImageElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLParagraphElement>(null);
@@ -49,7 +50,6 @@ export function ScrollHero() {
       introRef.current?.querySelectorAll<HTMLElement>(".hero-intro-word");
     const locationWords =
       locationRef.current?.querySelectorAll<HTMLElement>(".hero-location-word");
-    const contactSection = document.getElementById("contact");
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
@@ -104,18 +104,8 @@ export function ScrollHero() {
         `${imageShift.toFixed(1)}px`,
       );
 
-      const contactRect = contactSection?.getBoundingClientRect();
       const atPageOpening = window.scrollY <= stageTop + 8;
-      const contactIsEntering = Boolean(
-        contactRect &&
-          contactRect.top <= window.innerHeight * 0.82 &&
-          contactRect.bottom > 0,
-      );
-      header.toggleAttribute(
-        "data-socials-visible",
-        atPageOpening || contactIsEntering,
-      );
-      header.toggleAttribute("data-contact-brand", contactIsEntering);
+      header.toggleAttribute("data-socials-visible", atPageOpening);
 
       if (
         introductionWords &&
@@ -237,9 +227,15 @@ export function ScrollHero() {
           </a>
         </nav>
 
-        <details className="mobile-menu">
-          <summary aria-label="Open navigation">Menu</summary>
-          <nav aria-label="Mobile navigation">
+        <details className="mobile-menu" ref={mobileMenuRef}>
+          <summary aria-label="Toggle navigation">
+            <span className="mobile-menu-open">Menu</span>
+            <span className="mobile-menu-close">Close</span>
+          </summary>
+          <nav
+            aria-label="Mobile navigation"
+            onClick={() => mobileMenuRef.current?.removeAttribute("open")}
+          >
             <a href="#music">Music</a>
             <a href="#weddings">Weddings</a>
             <a href="#contact">Contact</a>

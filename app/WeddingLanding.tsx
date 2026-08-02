@@ -4,6 +4,7 @@ import { ReleaseCarousel } from "./ReleaseCarousel";
 import { WeddingStory } from "./WeddingStory";
 import { PerformanceShowcase } from "./PerformanceShowcase";
 import { ContactStage } from "./ContactStage";
+import { SongTickerOutro } from "./SongTickerOutro";
 import { musicReleases } from "./content/releases";
 
 export default function WeddingLanding() {
@@ -22,37 +23,16 @@ export default function WeddingLanding() {
       <ContactStage />
 
       <footer className="site-footer">
-        <div className="footer-copy">
-          <p className="footer-bio">
-            Aharon Berk is a Jewish singer, recording artist and live performer
-            based in Johannesburg, and the founder and lead vocalist of Azamra.
-          </p>
-          <p className="footer-location">
-            Based in Johannesburg. Available in Cape Town, across South Africa
-            and internationally.
-          </p>
+        <a className="footer-monogram" href="#top" aria-label="Back to top">
+          <img
+            src="/brand/ab-monogram.svg"
+            alt="Aharon Berk"
+            width="270"
+            height="156"
+          />
+        </a>
 
-          <nav className="footer-nav" aria-label="Footer navigation">
-            <a href="#music">Music</a>
-            <span aria-hidden="true">|</span>
-            <a href="#weddings">Weddings</a>
-            <span aria-hidden="true">|</span>
-            <a href="#about">About</a>
-            <span aria-hidden="true">|</span>
-            <a href="#contact">Contact</a>
-          </nav>
-        </div>
-
-        <div className="footer-bottom">
-          <a className="footer-monogram" href="#top" aria-label="Back to top">
-            <img
-              src="/brand/ab-monogram.svg"
-              alt="Aharon Berk"
-              width="270"
-              height="156"
-            />
-          </a>
-
+        <div className="footer-connect">
           <div className="footer-social-block">
             <p className="footer-social-label">Find Aharon on</p>
             <nav className="footer-socials" aria-label="Find Aharon online">
@@ -96,6 +76,12 @@ export default function WeddingLanding() {
               >
                 <img src="/social/apple-music.svg" alt="" width="24" height="24" />
               </a>
+            </nav>
+          </div>
+
+          <div className="footer-contact-block">
+            <p className="footer-social-label">Contact Aharon</p>
+            <nav className="footer-contact-links" aria-label="Contact Aharon">
               <a href="mailto:aharon@azamra.co.za" aria-label="Email Aharon Berk">
                 <img src="/contact/email.svg" alt="" width="24" height="24" />
               </a>
@@ -114,10 +100,36 @@ export default function WeddingLanding() {
               </a>
             </nav>
           </div>
+        </div>
+
+        <div className="footer-content">
+          <nav className="footer-nav" aria-label="Footer navigation">
+            <a href="#music">Music</a>
+            <span aria-hidden="true">|</span>
+            <a href="#weddings">Weddings</a>
+            <span aria-hidden="true">|</span>
+            <a href="#about">About</a>
+            <span aria-hidden="true">|</span>
+            <a href="#contact">Contact</a>
+          </nav>
+
+          <div className="footer-copy">
+            <p className="footer-bio">
+              Aharon Berk is a Jewish singer, recording artist and live
+              performer based in Johannesburg, and the founder and lead
+              vocalist of Azamra.
+            </p>
+            <p className="footer-location">
+              Based in Johannesburg. Available in Cape Town, across South
+              Africa and internationally.
+            </p>
+          </div>
 
           <p className="copyright">© {new Date().getFullYear()} Aharon Berk</p>
         </div>
       </footer>
+
+      <SongTickerOutro />
     </main>
   );
 }

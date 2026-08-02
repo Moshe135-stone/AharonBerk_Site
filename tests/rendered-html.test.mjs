@@ -77,6 +77,12 @@ test("preserves the existing landing experience at /weddings", async () => {
     /Based in Johannesburg\. Available in Cape Town, across South Africa and internationally\./,
   );
   assert.match(html, /Find Aharon on/);
+  assert.match(html, /Contact Aharon/);
+  assert.doesNotMatch(html, /Aharon on Spotify|Listen on Spotify|Keep scrolling/);
+  assert.match(html, /V'erastich Li/);
+  assert.match(html, /Halev Sheli/);
+  assert.match(html, /Tefilas HaEmunah/);
+  assert.match(html, /Lecha Dodi \(Modzitz\)/);
   assert.match(html, /href="#about"/);
   assert.match(html, /id="about"/);
   assert.match(html, /\/brand\/ab-monogram\.svg/);
@@ -106,6 +112,11 @@ test("preserves the existing landing experience at /weddings", async () => {
   assert.match(html, /open\.spotify\.com\/artist\/2on0c6iQBHGTIn30q7te5Q/);
   assert.match(html, /music\.apple\.com\/us\/artist\/aharon-berk\/1521973943/);
   assert.match(html, /\/social\/instagram\.svg/);
+  const heroSource = await readFile(
+    new URL("../app/ScrollHero.tsx", import.meta.url),
+    "utf8",
+  );
+  assert.doesNotMatch(heroSource, /data-contact-brand|contactIsEntering/);
   assert.match(html, /\/weddings\/canopy-bg\.webp/);
   assert.match(html, /\/weddings\/canopy-bg\.png/);
   assert.doesNotMatch(html, /\/weddings\/chuppah-cutout\.(?:webp|png)/);
