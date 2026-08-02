@@ -1,2 +1,0 @@
-gh CLI push test
-created via gh api on branch Popu-up-page
