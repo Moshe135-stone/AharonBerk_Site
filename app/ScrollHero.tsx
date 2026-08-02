@@ -279,6 +279,7 @@ export function ScrollHero() {
 
         <p
           className="hero-intro"
+          id="about"
           aria-label={heroIntroduction}
           ref={introRef}
         >

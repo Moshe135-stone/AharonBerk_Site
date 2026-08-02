@@ -68,6 +68,18 @@ test("preserves the existing landing experience at /weddings", async () => {
   assert.match(html, /Horas and receptions:/);
   assert.match(html, /Explore the music/);
   assert.match(html, /Get in.*touch/);
+  assert.match(
+    html,
+    /Aharon Berk is a Jewish singer, recording artist and live performer based in Johannesburg, and the founder and lead vocalist of Azamra\./,
+  );
+  assert.match(
+    html,
+    /Based in Johannesburg\. Available in Cape Town, across South Africa and internationally\./,
+  );
+  assert.match(html, /Find Aharon on/);
+  assert.match(html, /href="#about"/);
+  assert.match(html, /id="about"/);
+  assert.match(html, /\/brand\/ab-monogram\.svg/);
   assert.match(html, /Aharon Berk is a Jewish singer/);
   assert.match(html, /Based in Johannesburg/);
   assert.match(html, /Available in Cape Town/);
