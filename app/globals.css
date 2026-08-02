@@ -203,7 +203,7 @@ h3 {
   min-height: 100svh;
   border: 3px solid #6f6f6f;
   background: #020202;
-  color: #111;
+  color: #fff;
   overflow: hidden;
   isolation: isolate;
 }

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 async function render(pathname = "/") {
@@ -43,6 +44,16 @@ test("server-renders the Aharon Berk entry page", async () => {
   assert.match(html, /href="\/weddings"/);
   assert.match(html, /href="\/music"/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/i);
+
+  const css = await readFile(
+    new URL("../app/globals.css", import.meta.url),
+    "utf8",
+  );
+  assert.match(
+    css,
+    /\.entry-landing\s*\{[^}]*color:\s*#fff\s*;/s,
+    "entry choices must remain visible against the black popup background",
+  );
 });
 
 test("preserves the existing landing experience at /weddings", async () => {
