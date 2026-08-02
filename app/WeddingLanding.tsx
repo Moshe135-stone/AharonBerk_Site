@@ -125,7 +125,17 @@ export default function WeddingLanding() {
             </p>
           </div>
 
-          <p className="copyright">© {new Date().getFullYear()} Aharon Berk</p>
+          <div className="footer-legal">
+            <p className="copyright">© {new Date().getFullYear()} Aharon Berk</p>
+            <a
+              className="footer-credit"
+              href="https://www.thecreativestone.net"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Powered by The Creative Stone
+            </a>
+          </div>
         </div>
       </footer>
 

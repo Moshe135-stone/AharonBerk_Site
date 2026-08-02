@@ -78,6 +78,8 @@ test("preserves the existing landing experience at /weddings", async () => {
   );
   assert.match(html, /Find Aharon on/);
   assert.match(html, /Contact Aharon/);
+  assert.match(html, /Powered by The Creative Stone/);
+  assert.match(html, /https:\/\/www\.thecreativestone\.net/);
   assert.doesNotMatch(html, /Aharon on Spotify|Listen on Spotify|Keep scrolling/);
   assert.match(html, /V'erastich Li/);
   assert.match(html, /Halev Sheli/);

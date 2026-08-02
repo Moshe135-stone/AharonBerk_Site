@@ -2405,11 +2405,32 @@ h3 {
   transform: translate3d(0, -0.2rem, 0) scale(1.06);
 }
 
-.copyright {
+.footer-legal {
   margin: 1.25rem 0 0;
+}
+
+.copyright {
+  margin: 0;
   color: rgba(255, 253, 248, 0.3);
   font-size: 0.58rem;
   white-space: nowrap;
+}
+
+.footer-credit {
+  display: inline-block;
+  margin-top: 0.35rem;
+  color: rgba(255, 253, 248, 0.3);
+  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.52rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 180ms ease;
+}
+
+.footer-credit:hover,
+.footer-credit:focus-visible {
+  color: rgba(255, 253, 248, 0.72);
 }
 
 .footer-copy {
