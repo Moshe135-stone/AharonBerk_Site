@@ -65,10 +65,12 @@ export function WeddingStory() {
       const startX = compactLayout
         ? Math.max(24, (window.innerWidth - 160) / 2)
         : window.innerWidth * 0.24;
-      const endX = compactLayout ? 8 : window.innerWidth * 0.1;
-      const startY = window.innerHeight * (compactLayout ? 0.34 : 0.42);
-      const endY = window.innerHeight * (compactLayout ? 0.32 : 0.38);
       const compactScale = compactLayout ? 0.72 : 0.44;
+      const endX = compactLayout
+        ? Math.max(24, (window.innerWidth - 160 * compactScale) / 2)
+        : window.innerWidth * 0.1;
+      const startY = window.innerHeight * (compactLayout ? 0.22 : 0.42);
+      const endY = window.innerHeight * (compactLayout ? 0.22 : 0.38);
 
       sticky.style.setProperty(
         "--wedding-collab-x",
