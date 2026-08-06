@@ -1,6 +1,21 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 @import "tailwindcss";
 
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-group(music-page-title) {
+  animation-duration: 850ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 700ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 :root {
   --navy: #102b35;
   --navy-soft: #1a3a45;
@@ -296,6 +311,34 @@ h3 {
   pointer-events: none;
 }
 
+.entry-skip {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+}
+
+.entry-skip span {
+  position: absolute;
+  top: clamp(1.7rem, 4vw, 3.5rem);
+  right: clamp(1.7rem, 4vw, 3.5rem);
+  padding: 0.65rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.62rem;
+  font-variation-settings: "wght" 520;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition:
+    background-color 220ms ease,
+    color 220ms ease;
+}
+
+.entry-skip:hover span,
+.entry-skip:focus-visible span {
+  background: #fff;
+  color: #050505;
+}
+
 .entry-monogram {
   position: absolute;
   z-index: 2;
@@ -388,7 +431,8 @@ h3 {
   text-transform: uppercase;
 }
 
-.music-coming-soon {
+.music-coming-soon,
+.weddings-coming-soon {
   display: grid;
   position: relative;
   min-height: 100svh;
@@ -400,12 +444,22 @@ h3 {
   place-items: center;
 }
 
-.music-coming-soon > div {
+.weddings-coming-soon {
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.86), rgba(0, 0, 0, 0.3)),
+    url("/entry/wedding-canopy.png") center / cover;
+}
+
+.music-coming-soon > div,
+.weddings-coming-soon > div {
+  width: min(100%, 54rem);
+  min-width: 0;
   max-width: 54rem;
   text-align: center;
 }
 
-.music-coming-soon > div > p {
+.music-coming-soon > div > p,
+.weddings-coming-soon > div > p {
   margin-bottom: 1rem;
   font-family: Inter, "Helvetica Neue", Arial, sans-serif;
   font-size: 0.68rem;
@@ -414,12 +468,19 @@ h3 {
   text-transform: uppercase;
 }
 
-.music-coming-soon h1 {
+.music-coming-soon h1,
+.weddings-coming-soon h1 {
   margin-bottom: 2rem;
   color: #fff;
 }
 
-.music-coming-soon > div > a {
+.weddings-coming-soon h1 {
+  font-size: clamp(3rem, 7vw, 7rem);
+  text-wrap: balance;
+}
+
+.music-coming-soon > div > a,
+.weddings-coming-soon > div > a {
   display: inline-block;
   padding-bottom: 0.25rem;
   border-bottom: 1px solid currentColor;
@@ -428,6 +489,457 @@ h3 {
   font-variation-settings: "wght" 300;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+.weddings-coming-soon .coming-soon-note {
+  max-width: 34rem;
+  margin: -0.5rem auto 2rem;
+  line-height: 1.6;
+}
+
+.music-page {
+  --hero-progress: 0;
+  --nav-height: 8rem;
+  min-height: 100svh;
+  background: #030303;
+  color: #f6f6f3;
+  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  overflow: hidden;
+}
+
+.music-page-hero {
+  display: flex;
+  position: relative;
+  min-height: 100svh;
+  padding: clamp(13rem, 25vh, 18rem) clamp(2rem, 4.5vw, 4.5rem)
+    clamp(3rem, 6vh, 5rem);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.music-page-hero h1 {
+  margin: 0;
+  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(6rem, 13vw, 13rem);
+  font-variation-settings: "wght" 820;
+  letter-spacing: -0.085em;
+  line-height: 0.75;
+  text-transform: uppercase;
+  view-transition-name: music-page-title;
+}
+
+.music-page-hero > p {
+  width: min(42rem, 74vw);
+  margin: clamp(2rem, 4vh, 3rem) auto 1.5rem;
+  font-size: clamp(0.9rem, 1.22vw, 1.2rem);
+  font-weight: 300;
+  letter-spacing: 0.025em;
+  line-height: 1.34;
+  text-transform: uppercase;
+}
+
+.music-page-actions,
+.music-page-release nav {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.music-page-actions a,
+.music-page-release nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: clamp(0.95rem, 1.4vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.music-page-actions a span {
+  display: block;
+  position: relative;
+  width: 0.9em;
+  height: 0.65em;
+  background: linear-gradient(currentColor, currentColor) left 50% /
+    calc(100% - 0.12em) 0.1em no-repeat;
+  flex: 0 0 auto;
+  transition: transform 180ms ease;
+}
+
+.music-page-actions a span::after {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 0.38em;
+  height: 0.38em;
+  border-top: 0.1em solid currentColor;
+  border-right: 0.1em solid currentColor;
+  content: "";
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.music-page-actions a:hover span {
+  transform: translateX(0.25rem);
+}
+
+.music-page-release nav a span {
+  display: block;
+  width: 0.62em;
+  height: 0.62em;
+  border-top: 0.11em solid currentColor;
+  border-right: 0.11em solid currentColor;
+  background: linear-gradient(
+    to bottom right,
+    transparent 44%,
+    currentColor 45%,
+    currentColor 55%,
+    transparent 56%
+  );
+  flex: 0 0 auto;
+  transition: transform 180ms ease;
+}
+
+.music-page-release nav a:hover span {
+  transform: translate3d(0.15rem, -0.15rem, 0);
+}
+
+.music-page-feature {
+  display: grid;
+  min-height: 92svh;
+  padding: clamp(3rem, 7vw, 7rem);
+  align-items: center;
+  grid-template-columns: minmax(15rem, 0.72fr) minmax(24rem, 1.4fr);
+  gap: clamp(3rem, 8vw, 10rem);
+}
+
+.music-page-feature-copy {
+  align-self: center;
+}
+
+.music-page-feature[data-motion-ready] .music-page-feature-copy > * {
+  opacity: 0;
+  transform: translate3d(-4rem, 0, 0);
+}
+
+.music-page-feature[data-motion-armed] .music-page-feature-copy > * {
+  transition:
+    opacity 760ms ease,
+    transform 980ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.music-page-feature[data-motion-ready] .music-page-feature-copy > :nth-child(2) {
+  transition-delay: 90ms;
+}
+
+.music-page-feature[data-motion-ready] .music-page-feature-copy > :nth-child(3) {
+  transition-delay: 160ms;
+}
+
+.music-page-feature[data-motion-ready] .music-page-feature-copy > :nth-child(4) {
+  transition-delay: 230ms;
+}
+
+.music-page-feature[data-motion-ready] .music-page-feature-copy > :nth-child(5) {
+  transition-delay: 300ms;
+}
+
+.music-page-feature[data-motion-ready][data-in-view]
+  .music-page-feature-copy
+  > * {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.music-page-kicker,
+.music-page-year,
+.music-page-description {
+  text-transform: uppercase;
+}
+
+.music-page-kicker {
+  margin-bottom: 1rem;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: clamp(0.76rem, 1vw, 1rem);
+  font-variation-settings: "wght" 720;
+}
+
+.music-page-feature h2 {
+  max-width: 8ch;
+  margin: 0;
+  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(3.8rem, 6.5vw, 7rem);
+  font-variation-settings: "wght" 820;
+  letter-spacing: -0.065em;
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.music-page-year {
+  margin: 1.2rem 0 2.2rem;
+  font-size: clamp(1rem, 1.55vw, 1.4rem);
+  font-variation-settings: "wght" 680;
+}
+
+.music-page-description {
+  max-width: 19rem;
+  margin-bottom: clamp(3rem, 8vh, 6rem);
+  font-size: clamp(0.7rem, 0.86vw, 0.88rem);
+  font-variation-settings: "wght" 620;
+  line-height: 1.18;
+}
+
+.music-page-platforms {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.music-page-platforms a {
+  display: grid;
+  width: clamp(3.2rem, 4.5vw, 4.6rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  place-items: center;
+  transition: transform 200ms ease;
+}
+
+.music-page-platforms a:hover {
+  transform: translate3d(0, -0.2rem, 0);
+}
+
+.music-page-platforms img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.music-page-cover {
+  display: block;
+  width: min(100%, 56rem);
+  justify-self: end;
+}
+
+.music-page-feature[data-motion-ready] .music-page-cover {
+  opacity: 0;
+  clip-path: inset(0 0 0 18%);
+  transform: translate3d(clamp(4rem, 12vw, 11rem), 0, 0) scale(0.97);
+}
+
+.music-page-feature[data-motion-armed] .music-page-cover {
+  transition:
+    opacity 820ms ease 120ms,
+    clip-path 1100ms cubic-bezier(0.16, 1, 0.3, 1) 120ms,
+    transform 1100ms cubic-bezier(0.16, 1, 0.3, 1) 120ms;
+}
+
+.music-page-feature[data-motion-ready][data-in-view] .music-page-cover {
+  opacity: 1;
+  clip-path: inset(0);
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.music-page-cover picture,
+.music-page-cover img {
+  display: block;
+  width: 100%;
+}
+
+.music-page-cover img {
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.music-page-catalog {
+  padding: clamp(5rem, 12vw, 12rem) clamp(1.5rem, 3vw, 3rem)
+    clamp(10rem, 22vh, 18rem);
+}
+
+.music-page-release {
+  display: grid;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.56);
+  align-items: center;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2rem;
+}
+
+.release-artwork-cursor {
+  --cursor-x: -20rem;
+  --cursor-y: -20rem;
+  position: fixed;
+  z-index: 60;
+  top: 0;
+  left: 0;
+  width: clamp(6.5rem, 10vw, 9.5rem);
+  aspect-ratio: 1;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(var(--cursor-x), var(--cursor-y), 0);
+  transition: opacity 140ms ease;
+  will-change: transform;
+}
+
+.release-artwork-cursor img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 1.4rem 3rem rgba(0, 0, 0, 0.48);
+  object-fit: cover;
+  transform: rotate(2deg) scale(0.82);
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.release-artwork-cursor[data-visible] {
+  opacity: 1;
+}
+
+.release-artwork-cursor[data-visible] img {
+  transform: rotate(-2deg) scale(1);
+}
+
+.music-page-release[data-artwork-hover],
+.music-page-release[data-artwork-hover] * {
+  cursor: none;
+}
+
+.music-page-release:first-child {
+  border-top: 1px solid rgba(255, 255, 255, 0.56);
+}
+
+.music-page-release-heading {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: clamp(1rem, 3vw, 3rem);
+}
+
+.music-page-release h2 {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(2.4rem, 4.4vw, 5rem);
+  font-variation-settings: "wght" 820;
+  letter-spacing: -0.065em;
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.music-page-release time {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: clamp(0.8rem, 1.2vw, 1.1rem);
+  font-variation-settings: "wght" 720;
+}
+
+@media (max-width: 760px) {
+  .music-page {
+    --nav-height: 6.25rem;
+  }
+
+  .music-page-hero {
+    min-height: 100svh;
+    padding: 8rem 1.25rem 3rem;
+  }
+
+  .release-artwork-cursor {
+    display: none;
+  }
+
+  .music-page-hero h1 {
+    font-size: clamp(4.5rem, 23vw, 7rem);
+    line-height: 0.82;
+  }
+
+  .music-page-hero > p {
+    width: min(100%, 31rem);
+    margin-top: 2.4rem;
+    font-size: clamp(0.78rem, 3.5vw, 0.98rem);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1.32;
+  }
+
+  .music-page-actions {
+    gap: 1.25rem;
+  }
+
+  .music-page-feature {
+    min-height: auto;
+    padding: 5.5rem 1.25rem 3rem;
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+  }
+
+  .music-page-feature-copy {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+
+  .music-page-kicker,
+  .music-page-feature h2,
+  .music-page-year,
+  .music-page-description {
+    grid-column: 1;
+  }
+
+  .music-page-feature h2 {
+    max-width: 7ch;
+    font-size: clamp(3.8rem, 18vw, 5.6rem);
+  }
+
+  .music-page-description {
+    max-width: 21rem;
+    margin-bottom: 0;
+    font-size: 0.72rem;
+    line-height: 1.25;
+  }
+
+  .music-page-platforms {
+    grid-column: 2;
+    grid-row: 1 / span 4;
+    align-self: end;
+    flex-direction: column;
+  }
+
+  .music-page-platforms a {
+    width: 3.35rem;
+  }
+
+  .music-page-cover {
+    width: 100%;
+  }
+
+  .music-page-catalog {
+    padding: 6rem 1.25rem 10rem;
+  }
+
+  .music-page-release {
+    padding: 1.25rem 0;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .music-page-release-heading {
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .music-page-release h2 {
+    font-size: clamp(2rem, 10.5vw, 3.25rem);
+  }
+
+  .music-page-release nav {
+    justify-content: flex-end;
+    gap: 1.25rem;
+  }
+
+  .music-page-release nav a {
+    font-size: 0.95rem;
+  }
 }
 
 .site-header {
@@ -558,6 +1070,11 @@ h3 {
   transform-origin: center;
   animation: menu-text-open 1.25s cubic-bezier(0.16, 1, 0.3, 1)
     var(--item-delay) forwards;
+}
+
+.hero-nav-left a[href="/music"] span,
+.mobile-menu a[href="/music"] {
+  view-transition-name: music-page-title;
 }
 
 .hero-nav a,
@@ -2571,17 +3088,27 @@ h3 {
     font-size: clamp(3.3rem, 16vw, 5.4rem);
   }
 
+  .entry-landing[data-active]
+    .entry-choice[data-choice]
+    .entry-choice-label {
+    opacity: 1;
+    font-variation-settings: "wght" 620;
+    letter-spacing: -0.07em;
+    transform: none;
+  }
+
   .entry-image img {
     object-position: 66% center;
   }
 
   .entry-image-wedding img {
     object-position: center bottom;
-    transform: translate3d(12%, 6%, 0) scale(1.12);
+    transform: translate3d(15%, 9%, 0) scale(1.55);
   }
 
   .entry-image-music img {
     object-position: 61% center;
+    transform: scale(1.18);
   }
 
   .section-pad {
@@ -2658,6 +3185,10 @@ h3 {
     grid-template-rows: repeat(3, minmax(0, 1fr));
     overflow: hidden;
     animation: mobile-menu-backdrop-in 720ms ease 180ms both;
+  }
+
+  .music-page-header .mobile-menu nav {
+    grid-template-rows: repeat(2, minmax(0, 1fr));
   }
 
   .mobile-menu nav a {
@@ -2948,6 +3479,14 @@ h3 {
     font-size: clamp(3.7rem, 18vw, 5.5rem);
   }
 
+  .weddings-coming-soon {
+    padding: 1.5rem;
+  }
+
+  .weddings-coming-soon h1 {
+    font-size: clamp(2.8rem, 12vw, 4.25rem);
+  }
+
   .manifesto p {
     font-size: 1rem;
   }
@@ -3051,6 +3590,12 @@ h3 {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(music-page-title),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.01ms;
+  }
+
   html {
     scroll-behavior: auto;
   }
@@ -3081,6 +3626,14 @@ h3 {
     animation: none;
     clip-path: none;
     transform: none;
+  }
+
+  .music-page-feature[data-motion-ready] .music-page-feature-copy > *,
+  .music-page-feature[data-motion-ready] .music-page-cover {
+    opacity: 1;
+    clip-path: none;
+    transform: none;
+    transition: none;
   }
 
   .hero-socials {

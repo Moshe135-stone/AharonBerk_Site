@@ -341,7 +341,7 @@ export function MusicFeature() {
             </span>
           ))}
         </p>
-        <a href="#music-catalog">
+        <a href="/music">
           Explore the music <span aria-hidden="true">⟶</span>
         </a>
       </div>

@@ -30,6 +30,14 @@ export function EntryLanding() {
 
   return (
     <main className="entry-landing" data-active={activeChoice}>
+      <a
+        className="entry-skip"
+        href="/home"
+        aria-label="Continue to the Aharon Berk home page"
+      >
+        <span>Enter site</span>
+      </a>
+
       <div className="entry-image entry-image-wedding" aria-hidden="true">
         <picture>
           <source srcSet="/entry/aharon-image-6.webp" type="image/webp" />
@@ -57,7 +65,7 @@ export function EntryLanding() {
       </div>
       <div className="entry-vignette" aria-hidden="true" />
 
-      <a className="entry-monogram" href="/" aria-label="Aharon Berk home">
+      <a className="entry-monogram" href="/home" aria-label="Aharon Berk home">
         <img
           src="/brand/ab-monogram.svg"
           alt=""

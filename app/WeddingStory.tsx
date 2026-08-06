@@ -192,7 +192,7 @@ export function WeddingStory() {
           ))}
         </div>
 
-        <a className="wedding-story-explore" href="#music-catalog">
+        <a className="wedding-story-explore" href="/music">
           Explore the music <span aria-hidden="true">⟶</span>
         </a>
       </div>

@@ -156,10 +156,10 @@ export function ScrollHero() {
     <section className="hero-scroll-stage" id="top" ref={stageRef}>
       <header className="site-header" ref={headerRef}>
         <nav className="hero-nav hero-nav-left" aria-label="Music navigation">
-          <a href="#music">
+          <a href="/music">
             <span>Music</span>
           </a>
-          <a href="#weddings">
+          <a href="/weddings">
             <span>Weddings</span>
           </a>
         </nav>
@@ -236,8 +236,8 @@ export function ScrollHero() {
             aria-label="Mobile navigation"
             onClick={() => mobileMenuRef.current?.removeAttribute("open")}
           >
-            <a href="#music">Music</a>
-            <a href="#weddings">Weddings</a>
+            <a href="/music">Music</a>
+            <a href="/weddings">Weddings</a>
             <a href="#contact">Contact</a>
           </nav>
         </details>
