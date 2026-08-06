@@ -1,30 +1,20 @@
 import type { Metadata } from "next";
+import { SiteFooter } from "../SiteFooter";
+import { SongTickerOutro } from "../SongTickerOutro";
+import { WeddingsPage } from "./WeddingsPage";
 
 export const metadata: Metadata = {
-  title: "Weddings | Aharon Berk",
+  title: "Weddings | Aharon Berk & Azamra",
   description:
-    "The Aharon Berk and Azamra weddings page is currently under development.",
+    "Live music for Chuppas, Horas, receptions and seamless Jewish wedding celebrations with Aharon Berk and Azamra.",
 };
 
-export default function WeddingsPage() {
+export default function WeddingsRoute() {
   return (
-    <main className="weddings-coming-soon">
-      <a className="entry-monogram" href="/home" aria-label="Aharon Berk home">
-        <img
-          src="/brand/ab-monogram.svg"
-          alt=""
-          width="270"
-          height="156"
-        />
-      </a>
-      <div>
-        <p>Aharon Berk × Azamra</p>
-        <h1>Our weddings page is under development.</h1>
-        <p className="coming-soon-note">
-          We’re preparing a new home for Chuppas, Horas and celebrations.
-        </p>
-        <a href="/home">Continue to the home page</a>
-      </div>
+    <main className="weddings-page">
+      <WeddingsPage />
+      <SiteFooter id="contact" />
+      <SongTickerOutro />
     </main>
   );
 }

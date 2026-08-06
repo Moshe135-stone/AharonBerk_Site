@@ -88,7 +88,7 @@ export function SiteFooter({ id }: { id?: string }) {
           <span aria-hidden="true">|</span>
           <a href="/home#about">About</a>
           <span aria-hidden="true">|</span>
-          <a href="/home#contact">Contact</a>
+          <a href="/contact">Contact Us</a>
         </nav>
 
         <div className="footer-copy">

@@ -222,8 +222,8 @@ export function ScrollHero() {
           className="hero-nav hero-nav-right"
           aria-label="Information navigation"
         >
-          <a href="#contact">
-            <span>Contact</span>
+          <a href="/contact">
+            <span>Contact Us</span>
           </a>
         </nav>
 
@@ -238,7 +238,7 @@ export function ScrollHero() {
           >
             <a href="/music">Music</a>
             <a href="/weddings">Weddings</a>
-            <a href="#contact">Contact</a>
+            <a href="/contact">Contact Us</a>
           </nav>
         </details>
       </header>
