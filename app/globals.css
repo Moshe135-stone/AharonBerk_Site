@@ -1073,11 +1073,12 @@ h3 {
 .weddings-film-stage {
   display: grid;
   position: relative;
-  min-height: 105svh;
+  min-height: 125svh;
   padding: clamp(7rem, 12vw, 12rem) clamp(2rem, 7vw, 7rem);
   align-content: center;
-  grid-template-columns: minmax(13rem, 0.72fr) minmax(24rem, 1.4fr);
-  gap: clamp(3rem, 8vw, 9rem);
+  justify-items: center;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(2.5rem, 5vw, 5rem);
   overflow: hidden;
 }
 
@@ -1096,7 +1097,8 @@ h3 {
 }
 
 .weddings-film-copy {
-  align-self: center;
+  width: min(100%, 76rem);
+  text-align: center;
 }
 
 .weddings-film-kicker,
@@ -1121,9 +1123,15 @@ h3 {
   text-wrap: balance;
 }
 
+.weddings-film-copy h2 {
+  max-width: 14ch;
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .weddings-canopy-player {
-  width: min(100%, 62rem);
-  justify-self: end;
+  width: min(100%, 86rem);
+  justify-self: center;
   aspect-ratio: 3 / 2;
 }
 
@@ -1434,11 +1442,11 @@ h3 {
     min-height: auto;
     padding: 7rem 1.25rem 8rem;
     grid-template-columns: 1fr;
-    gap: 3.5rem;
+    gap: 2.25rem;
   }
 
   .weddings-film-copy {
-    width: min(100%, 23rem);
+    width: 100%;
   }
 
   .weddings-film-copy h2,
@@ -1447,8 +1455,8 @@ h3 {
   }
 
   .weddings-canopy-player {
-    width: calc(100% + 2rem);
-    margin: 1rem -1rem 0;
+    width: calc(100% + 2.25rem);
+    margin: 0 -1.125rem;
     justify-self: center;
   }
 

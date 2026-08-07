@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const weddingVideo = "/weddings/videos/horas.mp4";
+const weddingVideo = "/weddings/videos/second-set.mp4";
 
 const services = [
   {
