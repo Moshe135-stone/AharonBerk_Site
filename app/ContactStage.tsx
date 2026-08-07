@@ -105,7 +105,7 @@ export function ContactStage() {
       <div className="contact-stage-shade" aria-hidden="true" />
 
       <h2
-        className="contact-stage-title"
+        className="contact-stage-title site-h1-style"
         aria-label="Get in touch"
         ref={titleRef}
       >

@@ -19,6 +19,21 @@ function ReleaseSlide({
   total: number;
   isActive: boolean;
 }) {
+  const coverArtwork = (
+    <picture>
+      <source srcSet={release.cover.webp} />
+      <img
+        src={release.cover.fallback}
+        alt={release.cover.alt}
+        width="1000"
+        height="1000"
+        loading="lazy"
+        decoding="async"
+        draggable={false}
+      />
+    </picture>
+  );
+
   return (
     <article
       className={`release-carousel-slide ${isActive ? "is-active" : ""}`}
@@ -26,26 +41,19 @@ function ReleaseSlide({
       data-release-id={release.id}
     >
       <div className="release-carousel-content">
-        <a
-          className="release-carousel-cover"
-          href={release.links.listen}
-          target="_blank"
-          rel="noreferrer"
-          aria-label={`Listen to ${release.title} on Spotify`}
-        >
-          <picture>
-            <source srcSet={release.cover.webp} type="image/webp" />
-            <img
-              src={release.cover.fallback}
-              alt={release.cover.alt}
-              width="1000"
-              height="1000"
-              loading="lazy"
-              decoding="async"
-              draggable={false}
-            />
-          </picture>
-        </a>
+        {release.links.listen ? (
+          <a
+            className="release-carousel-cover"
+            href={release.links.listen}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`Listen to ${release.title}`}
+          >
+            {coverArtwork}
+          </a>
+        ) : (
+          <div className="release-carousel-cover">{coverArtwork}</div>
+        )}
 
         <div className="release-carousel-meta">
           {release.publishedAt ? (
@@ -60,16 +68,19 @@ function ReleaseSlide({
           <h2>{release.title}</h2>
           <p>{release.description}</p>
 
-          <div className="release-carousel-actions">
-            <a
-              href={release.links.listen}
-              target="_blank"
-              rel="noreferrer"
-              tabIndex={isActive ? undefined : -1}
-            >
-              Listen <span aria-hidden="true">⟶</span>
-            </a>
-            {release.links.watch ? (
+          {release.links.listen || release.links.watch ? (
+            <div className="release-carousel-actions">
+              {release.links.listen ? (
+                <a
+                  href={release.links.listen}
+                  target="_blank"
+                  rel="noreferrer"
+                  tabIndex={isActive ? undefined : -1}
+                >
+                  Listen <span aria-hidden="true">⟶</span>
+                </a>
+              ) : null}
+              {release.links.watch ? (
               <a
                 href={release.links.watch}
                 target="_blank"
@@ -78,8 +89,11 @@ function ReleaseSlide({
               >
                 Watch now <span aria-hidden="true">⟶</span>
               </a>
-            ) : null}
-          </div>
+              ) : null}
+            </div>
+          ) : (
+            <p className="release-carousel-status">Links coming soon</p>
+          )}
         </div>
       </div>
     </article>

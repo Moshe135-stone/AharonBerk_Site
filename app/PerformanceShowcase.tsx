@@ -9,46 +9,34 @@ import {
   type WheelEvent,
 } from "react";
 
-type PerformanceItem = {
+export type PerformanceItem = {
   id: string;
   title: string;
-  date: string;
+  duration: string;
   image: string;
+  url: string;
   position?: string;
 };
 
-const performances: PerformanceItem[] = [
-  {
-    id: "friedman-bach",
-    title: "Friedman & Bach wedding",
-    date: "2/3/26",
-    image: "/performance/friedman-bach.webp",
-    position: "50% 42%",
-  },
-  {
-    id: "yeshiva-college",
-    title: "Yeshiva College event",
-    date: "11/3/25",
-    image: "/performance/yeshiva-college.webp",
-    position: "50% 44%",
-  },
-  {
-    id: "maharsha",
-    title: "Maharsha",
-    date: "11/3/25",
-    image: "/performance/maharsha.webp",
-    position: "50% 50%",
-  },
-  {
-    id: "sukkos-578",
-    title: "Sukkos 578",
-    date: "11/3/25",
-    image: "/performance/sukkos-578.webp",
-    position: "50% 44%",
-  },
-];
+export type WatchPageCopy = {
+  heading: string;
+  watchMoreLabel: string;
+  watchMoreUrl: string;
+};
 
-export function PerformanceShowcase() {
+const defaultWatchPageCopy: WatchPageCopy = {
+  heading: "Watch Aharon perform",
+  watchMoreLabel: "Watch more",
+  watchMoreUrl: "https://www.youtube.com/@aharonberkmusic/videos",
+};
+
+export function PerformanceShowcase({
+  performances,
+  watchPage = defaultWatchPageCopy,
+}: {
+  performances: PerformanceItem[];
+  watchPage?: WatchPageCopy;
+}) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [timelineVisible, setTimelineVisible] = useState(true);
   const timelineRef = useRef<HTMLDivElement>(null);
@@ -136,27 +124,30 @@ export function PerformanceShowcase() {
     >
       <div className="performance-media" aria-hidden="true">
         {performances.map((performance, index) => (
-          <img
+          <span
             key={performance.id}
-            className={index === activeIndex ? "is-active" : ""}
-            src={performance.image}
-            alt=""
-            loading={index === 0 ? "eager" : "lazy"}
-            style={{ objectPosition: performance.position }}
+            className={`performance-media-fill ${
+              index === activeIndex ? "is-active" : ""
+            }`}
+            style={{
+              backgroundImage: `url("${performance.image}")`,
+              backgroundPosition: performance.position ?? "center",
+            }}
           />
         ))}
       </div>
 
       <div className="performance-shade" aria-hidden="true" />
 
-      <h2 className="performance-title">
-        Watch Aharon
-        <br />
-        perform
-      </h2>
+      <h2 className="performance-title site-h1-style">{watchPage.heading}</h2>
 
-      <a className="performance-watch-more" href="#performance-timeline">
-        Watch more <span aria-hidden="true">→</span>
+      <a
+        className="performance-watch-more"
+        href={watchPage.watchMoreUrl}
+        target="_blank"
+        rel="noreferrer"
+      >
+        {watchPage.watchMoreLabel} <span aria-hidden="true">→</span>
       </a>
 
       <div
@@ -178,23 +169,26 @@ export function PerformanceShowcase() {
           aria-label="Performance videos"
         >
           {performances.map((performance, index) => (
-            <button
+            <a
               className={`performance-timeline-item ${
                 index === activeIndex ? "is-active" : ""
               }`}
-              type="button"
+              href={performance.url}
+              target="_blank"
+              rel="noreferrer"
               key={performance.id}
               data-performance-index={index}
-              aria-pressed={index === activeIndex}
+              aria-label={`Watch ${performance.title} on YouTube`}
               onPointerEnter={() => setActiveIndex(index)}
               onFocus={() => setActiveIndex(index)}
-              onClick={() => setActiveIndex(index)}
             >
               <span className="performance-item-title">
                 {performance.title}
               </span>
-              <span className="performance-item-date">{performance.date}</span>
-            </button>
+              <span className="performance-item-date">
+                {performance.duration}
+              </span>
+            </a>
           ))}
         </div>
       </div>

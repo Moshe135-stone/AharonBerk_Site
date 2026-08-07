@@ -9,9 +9,9 @@ export function MusicPageMotion() {
   useEffect(() => {
     const page = document.querySelector<HTMLElement>(".music-page");
     const header = document.querySelector<HTMLElement>(".music-page-header");
-    const feature = document.querySelector<HTMLElement>(".music-page-feature");
+    const features = document.querySelectorAll<HTMLElement>(".music-page-feature");
     const artworkCursor = cursorRef.current;
-    if (!page || !header || !feature || !artworkCursor) return;
+    if (!page || !header || !features.length || !artworkCursor) return;
 
     pageRef.current = page;
     let frame = 0;
@@ -29,22 +29,24 @@ export function MusicPageMotion() {
       if (!frame) frame = window.requestAnimationFrame(updateHeader);
     };
 
-    feature.setAttribute("data-motion-ready", "");
+    features.forEach((feature) => feature.setAttribute("data-motion-ready", ""));
     armFrame = window.requestAnimationFrame(() => {
       armFrame = window.requestAnimationFrame(() => {
-        feature.setAttribute("data-motion-armed", "");
+        features.forEach((feature) => feature.setAttribute("data-motion-armed", ""));
       });
     });
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        feature.setAttribute("data-in-view", "");
-        observer.disconnect();
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          (entry.target as HTMLElement).setAttribute("data-in-view", "");
+          observer.unobserve(entry.target);
+        });
       },
       { threshold: 0.35 },
     );
 
-    observer.observe(feature);
+    features.forEach((feature) => observer.observe(feature));
 
     const cursorImage = artworkCursor.querySelector<HTMLImageElement>("img");
     const releaseRows = document.querySelectorAll<HTMLElement>(
@@ -110,7 +112,10 @@ export function MusicPageHeader() {
 
   return (
     <header className="site-header music-page-header">
-      <nav className="hero-nav hero-nav-left" aria-label="Wedding navigation">
+      <nav className="hero-nav hero-nav-left" aria-label="Primary navigation">
+        <a href="/home">
+          <span>Home</span>
+        </a>
         <a href="/weddings">
           <span>Weddings</span>
         </a>
@@ -181,6 +186,7 @@ export function MusicPageHeader() {
           aria-label="Mobile navigation"
           onClick={() => mobileMenuRef.current?.removeAttribute("open")}
         >
+          <a href="/home">Home</a>
           <a href="/weddings">Weddings</a>
           <a href="/contact">Contact Us</a>
         </nav>

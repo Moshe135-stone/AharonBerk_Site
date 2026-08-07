@@ -36,7 +36,8 @@ function WeddingsHeader() {
 
   return (
     <header className="site-header weddings-page-header" data-socials-visible>
-      <nav className="hero-nav hero-nav-left" aria-label="Music navigation">
+      <nav className="hero-nav hero-nav-left" aria-label="Primary navigation">
+        <a href="/home"><span>Home</span></a>
         <a href="/music"><span>Music</span></a>
       </nav>
 
@@ -65,6 +66,7 @@ function WeddingsHeader() {
           <span className="mobile-menu-close">Close</span>
         </summary>
         <nav aria-label="Mobile navigation" onClick={() => mobileMenuRef.current?.removeAttribute("open")}>
+          <a href="/home">Home</a>
           <a href="/music">Music</a>
           <a href="/contact">Contact Us</a>
         </nav>
@@ -185,7 +187,6 @@ export function WeddingsPage() {
                         loading="lazy"
                       />
                       <div className="weddings-service-overlay">
-                        <h3>{service.title}</h3>
                         <p>{service.description}</p>
                       </div>
                     </div>

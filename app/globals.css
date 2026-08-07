@@ -186,7 +186,6 @@ p {
   margin-top: 0;
 }
 
-h1,
 h2 {
   font-family: Georgia, "Times New Roman", serif;
   font-weight: 400;
@@ -196,7 +195,13 @@ h2 {
 
 h1 {
   margin-bottom: 2rem;
+  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(4rem, 8.2vw, 8.5rem);
+  font-weight: 800;
+  font-variation-settings: "wght" 820;
+  letter-spacing: -0.085em;
+  line-height: 0.75;
+  text-transform: uppercase;
 }
 
 h2 {
@@ -624,9 +629,20 @@ h3 {
   align-self: center;
 }
 
+.music-page-feature-reverse .music-page-feature-copy {
+  grid-column: 2;
+  grid-row: 1;
+}
+
 .music-page-feature[data-motion-ready] .music-page-feature-copy > * {
   opacity: 0;
   transform: translate3d(-4rem, 0, 0);
+}
+
+.music-page-feature-reverse[data-motion-ready]
+  .music-page-feature-copy
+  > * {
+  transform: translate3d(4rem, 0, 0);
 }
 
 .music-page-feature[data-motion-armed] .music-page-feature-copy > * {
@@ -721,16 +737,36 @@ h3 {
   object-fit: contain;
 }
 
+.music-page-feature-status {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.52);
+  font-size: clamp(0.78rem, 1vw, 0.95rem);
+  font-variation-settings: "wght" 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
 .music-page-cover {
   display: block;
   width: min(100%, 56rem);
   justify-self: end;
 }
 
+.music-page-feature-reverse .music-page-cover {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+}
+
 .music-page-feature[data-motion-ready] .music-page-cover {
   opacity: 0;
   clip-path: inset(0 0 0 18%);
   transform: translate3d(clamp(4rem, 12vw, 11rem), 0, 0) scale(0.97);
+}
+
+.music-page-feature-reverse[data-motion-ready] .music-page-cover {
+  clip-path: inset(0 18% 0 0);
+  transform: translate3d(clamp(-11rem, -12vw, -4rem), 0, 0) scale(0.97);
 }
 
 .music-page-feature[data-motion-armed] .music-page-cover {
@@ -840,6 +876,15 @@ h3 {
   font-variation-settings: "wght" 720;
 }
 
+.music-page-release-pending {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: clamp(0.78rem, 1vw, 0.95rem);
+  font-variation-settings: "wght" 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 @media (max-width: 760px) {
   .music-page {
     --nav-height: 6.25rem;
@@ -855,8 +900,11 @@ h3 {
   }
 
   .music-page-hero h1 {
-    font-size: clamp(4.5rem, 23vw, 7rem);
-    line-height: 0.82;
+    max-width: 100%;
+    font-size: clamp(3rem, 17.5vw, 5.7rem);
+    letter-spacing: -0.075em;
+    line-height: 0.88;
+    white-space: nowrap;
   }
 
   .music-page-hero > p {
@@ -884,6 +932,12 @@ h3 {
     grid-template-columns: 1fr auto;
   }
 
+  .music-page-feature-reverse .music-page-feature-copy,
+  .music-page-feature-reverse .music-page-cover {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
   .music-page-kicker,
   .music-page-feature h2,
   .music-page-year,
@@ -908,6 +962,14 @@ h3 {
     grid-row: 1 / span 4;
     align-self: end;
     flex-direction: column;
+  }
+
+  .music-page-feature-status {
+    max-width: 7rem;
+    grid-column: 2;
+    grid-row: 1 / span 4;
+    align-self: end;
+    text-align: right;
   }
 
   .music-page-platforms a {
@@ -1324,6 +1386,18 @@ h3 {
   object-fit: cover;
 }
 
+.weddings-service:nth-child(1) .weddings-service-media > img {
+  object-position: 68% center;
+}
+
+.weddings-service:nth-child(2) .weddings-service-media > img {
+  object-position: 42% center;
+}
+
+.weddings-service:nth-child(3) .weddings-service-media > img {
+  object-position: center top;
+}
+
 .weddings-service-overlay {
   display: flex;
   position: relative;
@@ -1331,19 +1405,9 @@ h3 {
   min-height: min(68vw, 49rem);
   padding: clamp(2rem, 4vw, 4rem);
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), transparent 43%, rgba(0, 0, 0, 0.82));
-  justify-content: space-between;
+  justify-content: flex-end;
   flex-direction: column;
   pointer-events: none;
-}
-
-.weddings-service-overlay h3 {
-  width: min-content;
-  margin: 0;
-  font-size: clamp(2rem, 4vw, 4.5rem);
-  font-variation-settings: "wght" 800;
-  letter-spacing: -0.04em;
-  line-height: 0.96;
-  text-transform: uppercase;
 }
 
 .weddings-service-overlay p {
@@ -1405,14 +1469,15 @@ h3 {
     --nav-height: 6.25rem;
   }
 
-  .weddings-page-header .mobile-menu nav {
-    grid-template-rows: repeat(2, minmax(0, 1fr));
-  }
-
   .weddings-hero {
     min-height: 100svh;
-    padding: 8rem 1.25rem 3.5rem;
+    padding: calc(var(--nav-height) + 1.75rem) 1.25rem 3.5rem;
     align-items: end;
+  }
+
+  .weddings-hero-copy {
+    width: 100%;
+    max-width: 36rem;
   }
 
   .weddings-hero-image {
@@ -1427,14 +1492,22 @@ h3 {
   }
 
   .weddings-hero h1 {
-    font-size: clamp(4.5rem, 21.5vw, 7rem);
-    line-height: 0.82;
+    max-width: 100%;
+    font-size: clamp(3rem, 17.5vw, 5.7rem);
+    letter-spacing: -0.075em;
+    line-height: 0.88;
+    white-space: nowrap;
   }
 
   .weddings-hero-copy p {
+    box-sizing: border-box;
     width: 100%;
-    margin-top: 2rem;
-    font-size: clamp(0.75rem, 3.2vw, 0.9rem);
+    max-width: 32rem;
+    margin: clamp(1.35rem, 4vh, 2rem) auto 1.35rem;
+    padding: 0 0.5rem;
+    font-size: clamp(0.8rem, 3.35vw, 0.95rem);
+    letter-spacing: 0.015em;
+    line-height: 1.65;
     text-wrap: pretty;
   }
 
@@ -1497,24 +1570,31 @@ h3 {
     padding: 1.5rem;
   }
 
-  .weddings-service-overlay h3 {
-    font-size: clamp(1.8rem, 9vw, 3rem);
-  }
-
   .weddings-service-overlay p {
     font-size: 0.8rem;
     line-height: 1.65;
   }
 
   .weddings-cta {
-    min-height: 45svh;
-    padding: 5rem 1.25rem;
+    min-height: 52svh;
+    padding: calc(var(--nav-height) + 3rem) 1.25rem 5rem;
     align-items: flex-start;
+    justify-content: center;
     flex-direction: column;
+    gap: 2rem;
   }
 
   .weddings-cta p {
-    font-size: clamp(3rem, 15vw, 5rem);
+    width: 100%;
+    max-width: 10ch;
+    font-size: clamp(2.5rem, 12vw, 4.5rem);
+    letter-spacing: -0.055em;
+    line-height: 0.94;
+    text-wrap: balance;
+  }
+
+  .weddings-cta a {
+    font-size: clamp(0.9rem, 4vw, 1.1rem);
   }
 
 }
@@ -1533,6 +1613,7 @@ h3 {
   background: transparent;
   color: var(--paper);
   isolation: isolate;
+  transition: color 220ms ease;
 }
 
 .site-header::before {
@@ -1541,7 +1622,7 @@ h3 {
   top: 0;
   right: 0;
   left: 0;
-  height: calc(100% + 9rem);
+  height: 100%;
   background: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 0.86) 0%,
@@ -1553,8 +1634,6 @@ h3 {
     rgba(0, 0, 0, 0.1) 93%,
     transparent 100%
   );
-  -webkit-backdrop-filter: blur(18px) brightness(0.5) saturate(0.5);
-  backdrop-filter: blur(18px) brightness(0.5) saturate(0.5);
   content: "";
   -webkit-mask-image: linear-gradient(
     to bottom,
@@ -1579,11 +1658,30 @@ h3 {
     transparent 100%
   );
   pointer-events: none;
+  transition: opacity 220ms ease;
 }
 
 .site-header > * {
   position: relative;
   z-index: 1;
+}
+
+.site-header[data-on-light-story] {
+  color: #111;
+}
+
+.site-header[data-on-light-story]::before {
+  opacity: 0;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.site-header[data-on-light-story] .animated-wordmark img {
+  filter: brightness(0);
+}
+
+.site-header .animated-wordmark img {
+  transition: filter 220ms ease;
 }
 
 .wordmark {
@@ -1626,6 +1724,11 @@ h3 {
 .hero-nav-left a:nth-child(2) {
   --item-delay: 0.42s;
   --menu-origin-x: clamp(8rem, 18vw, 16rem);
+}
+
+.hero-nav-left a:nth-child(3) {
+  --item-delay: 0.6s;
+  --menu-origin-x: clamp(5rem, 12vw, 11rem);
 }
 
 .hero-nav-right a:nth-child(1) {
@@ -1771,11 +1874,11 @@ h3 {
 
 .hero-picture {
   position: absolute;
-  top: var(--nav-height);
+  top: 0;
   right: 0;
   left: 0;
   width: 100%;
-  height: calc(125% - 5rem);
+  height: 125%;
   overflow: hidden;
   transform: translate3d(0, var(--hero-image-shift), 0) scale(1.045);
   transform-origin: center center;
@@ -1865,7 +1968,7 @@ h3 {
 
 .hero-shade {
   position: absolute;
-  top: var(--nav-height);
+  top: 0;
   right: 0;
   bottom: 0;
   left: 0;
@@ -2633,6 +2736,15 @@ h3 {
   opacity: 0.68;
 }
 
+.release-carousel-status {
+  margin: clamp(2rem, 5vh, 3rem) 0 0;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: clamp(0.82rem, 1.1vw, 1rem);
+  font-variation-settings: "wght" 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .release-carousel-indicators {
   display: flex;
   position: absolute;
@@ -2900,6 +3012,40 @@ h3 {
   color: #fff;
 }
 
+.performance-showcase::before {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: clamp(18rem, 55vh, 34rem);
+  background: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 28%,
+    rgba(0, 0, 0, 0.9) 46%,
+    rgba(0, 0, 0, 0.62) 66%,
+    rgba(0, 0, 0, 0.28) 83%,
+    transparent 100%
+  );
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  content: "";
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 58%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 58%,
+    transparent 100%
+  );
+}
+
 .performance-showcase::after {
   position: absolute;
   right: -4%;
@@ -2922,35 +3068,36 @@ h3 {
 }
 
 .performance-media,
-.performance-media img,
+.performance-media-fill,
 .performance-shade {
   position: absolute;
   inset: 0;
 }
 
 .performance-media {
-  z-index: -2;
+  z-index: 0;
   background: #111;
+  transform: translateZ(0);
 }
 
-.performance-media img {
-  width: 100%;
-  height: 100%;
+.performance-media-fill {
+  display: block;
   opacity: 0;
-  object-fit: cover;
+  background-repeat: no-repeat;
+  background-size: cover;
   transform: scale(1.04);
   transition:
     opacity 800ms cubic-bezier(0.22, 1, 0.36, 1),
     transform 1300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.performance-media img.is-active {
+.performance-media-fill.is-active {
   opacity: 1;
   transform: scale(1);
 }
 
 .performance-shade {
-  z-index: -1;
+  z-index: 1;
   background:
     linear-gradient(90deg, rgba(0, 0, 0, 0.46) 0%, transparent 46%),
     linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, transparent 48%),
@@ -2960,13 +3107,13 @@ h3 {
 
 .performance-title {
   position: absolute;
-  top: clamp(3rem, 7vh, 5.5rem);
+  top: clamp(8rem, 17vh, 10rem);
   left: clamp(1.5rem, 5.5vw, 5.5rem);
-  z-index: 2;
+  z-index: 3;
   margin: 0;
   color: #fff;
   font-family: Inter, "Helvetica Neue", Arial, sans-serif;
-  font-size: clamp(2.25rem, 3.55vw, 4rem);
+  font-size: clamp(4rem, 6.5vw, 7.5rem);
   font-weight: 700;
   letter-spacing: -0.045em;
   line-height: 1.04;
@@ -3264,7 +3411,7 @@ h3 {
 .contact-stage-title {
   position: absolute;
   z-index: 2;
-  top: clamp(4.5rem, 15vh, 9rem);
+  top: clamp(9rem, 19vh, 12rem);
   left: clamp(2.75rem, 8.5vw, 9rem);
   margin: 0;
   color: #fff;
@@ -3769,10 +3916,6 @@ h3 {
     animation: mobile-menu-backdrop-in 720ms ease 180ms both;
   }
 
-  .music-page-header .mobile-menu nav {
-    grid-template-rows: repeat(2, minmax(0, 1fr));
-  }
-
   .mobile-menu nav a {
     display: flex;
     width: 100%;
@@ -3835,10 +3978,10 @@ h3 {
   }
 
   .hero-picture {
-    top: var(--nav-height);
+    top: 0;
     right: 0;
     left: 0;
-    height: calc(122% - 3rem);
+    height: 122%;
     transform: translate3d(0, var(--hero-image-shift), 0) scale(1.04);
   }
 
@@ -3847,7 +3990,7 @@ h3 {
   }
 
   .hero-shade {
-    top: var(--nav-height);
+    top: 0;
   }
 
   .hero-shade::after {
@@ -4000,7 +4143,7 @@ h3 {
   }
 
   .contact-stage-title {
-    top: 12%;
+    top: calc(6.25rem + 1.5rem);
     left: 1.5rem;
     font-size: clamp(4.5rem, 15vw, 7.5rem);
   }
@@ -4085,9 +4228,9 @@ h3 {
   }
 
   .performance-title {
-    top: 2rem;
+    top: calc(6.25rem + 1.5rem);
     left: 1.35rem;
-    font-size: clamp(2rem, 10.5vw, 3rem);
+    font-size: clamp(2.75rem, 13vw, 4.5rem);
   }
 
   .performance-watch-more {
@@ -4126,7 +4269,7 @@ h3 {
   }
 
   .contact-stage-title {
-    top: 5rem;
+    top: calc(6.25rem + 1.5rem);
     left: 1.25rem;
     font-size: clamp(3.6rem, 17vw, 5.2rem);
   }
@@ -4174,6 +4317,7 @@ h3 {
 /* Shared body-copy rhythm across every site surface. */
 .hero-intro,
 .hero-location,
+.wedding-story-copy,
 .music-feature-copy p,
 .release-carousel-details > p,
 .music-page-hero > p,
@@ -4184,6 +4328,23 @@ h3 {
   font-weight: 500;
   font-variation-settings: "wght" 500;
   line-height: 1.65;
+}
+
+/* Page-level display treatment, reusable on semantic section headings. */
+.site-h1-style {
+  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-weight: 800;
+  font-variation-settings: "wght" 820;
+  letter-spacing: -0.085em;
+  line-height: 0.75;
+  text-transform: uppercase;
+}
+
+@media (max-width: 760px) {
+  .site-h1-style {
+    letter-spacing: -0.075em;
+    line-height: 0.88;
+  }
 }
 
 .contact-page {
@@ -4524,12 +4685,12 @@ h3 {
   }
 
   .contact-page::before {
-    position: fixed;
+    position: absolute;
   }
 
   .contact-page-picture,
   .contact-page-shade {
-    position: fixed;
+    position: absolute;
   }
 
   .contact-page-picture img {
@@ -4585,6 +4746,12 @@ h3 {
     grid-column: 1;
     flex-wrap: wrap;
   }
+
+  .contact-page + .site-footer {
+    position: relative;
+    z-index: 30;
+    isolation: isolate;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -4611,7 +4778,7 @@ h3 {
     animation: none;
   }
 
-  .performance-media img,
+  .performance-media-fill,
   .performance-timeline {
     transition: none;
   }

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { musicPageContent } from "../content/music-page";
 import { SiteFooter } from "../SiteFooter";
 import { SongTickerOutro } from "../SongTickerOutro";
 import { MusicPageHeader, MusicPageMotion } from "./MusicPageMotion";
+import { getFeaturedReleases, getMusicPage, getReleases } from "../sanity/queries";
+import { urlForImage } from "../sanity/client";
 
 export const metadata: Metadata = {
   title: "Music | Aharon Berk",
@@ -10,8 +11,22 @@ export const metadata: Metadata = {
     "Explore Aharon Berk’s latest release, selected Jewish music and videos.",
 };
 
-export default function MusicPage() {
-  const { hero, featuredRelease, platforms, releases } = musicPageContent;
+export default async function MusicPage() {
+  const [musicPage, featuredReleases, allReleases] = await Promise.all([
+    getMusicPage(),
+    getFeaturedReleases(),
+    getReleases(),
+  ]);
+
+  const featuredSlugs = new Set(featuredReleases.map((r) => r.slug));
+  const catalogReleases = allReleases.filter((r) => !featuredSlugs.has(r.slug));
+
+  const hero = {
+    title: musicPage?.heroTitle ?? "Music",
+    introduction: musicPage?.heroIntroduction ?? "",
+    links: musicPage?.heroLinks ?? [],
+  };
+  const platforms = musicPage?.platforms ?? [];
 
   return (
     <main className="music-page">
@@ -29,73 +44,115 @@ export default function MusicPage() {
         </nav>
       </section>
 
-      <section
-        className="music-page-feature"
-        aria-labelledby="featured-release-title"
-        data-motion-ready
-      >
-        <div className="music-page-feature-copy">
-          <p className="music-page-kicker">Latest release</p>
-          <h2 id="featured-release-title">{featuredRelease.title}</h2>
-          <p className="music-page-year">{featuredRelease.year}</p>
-          <p className="music-page-description">{featuredRelease.description}</p>
-          <nav className="music-page-platforms" aria-label="Listen to the latest release">
-            {platforms.map((platform) => (
+      {featuredReleases.map((featuredRelease, index) => {
+        const coverUrl = urlForImage(featuredRelease.coverArt).width(640).height(640).url();
+
+        return (
+          <section
+            className={`music-page-feature ${index % 2 ? "music-page-feature-reverse" : ""}`}
+            aria-labelledby={`featured-release-title-${featuredRelease.slug}`}
+            data-feature-index={index}
+            data-motion-ready
+            key={featuredRelease.slug}
+          >
+            <div className="music-page-feature-copy">
+              <p className="music-page-kicker">Featured release</p>
+              <h2 id={`featured-release-title-${featuredRelease.slug}`}>
+                {featuredRelease.title}
+              </h2>
+              <p className="music-page-year">{featuredRelease.dateLabel}</p>
+              <p className="music-page-description">{featuredRelease.description}</p>
+              {featuredRelease.listenUrl ? (
+                <nav
+                  className="music-page-platforms"
+                  aria-label={`Listen to ${featuredRelease.title}`}
+                >
+                  {platforms.map((platform) => (
+                    <a
+                      href={
+                        platform.label === "Listen on Spotify"
+                          ? featuredRelease.listenUrl
+                          : platform.href
+                      }
+                      key={platform.label}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`${platform.label}: ${featuredRelease.title}`}
+                    >
+                      <img
+                        src={urlForImage(platform.icon).width(64).height(64).url()}
+                        alt=""
+                        width="64"
+                        height="64"
+                      />
+                    </a>
+                  ))}
+                </nav>
+              ) : (
+                <p className="music-page-feature-status">Links coming soon</p>
+              )}
+            </div>
+
+            {featuredRelease.listenUrl ? (
               <a
-                href={platform.href}
-                key={platform.label}
+                className="music-page-cover"
+                href={featuredRelease.listenUrl}
                 target="_blank"
                 rel="noreferrer"
-                aria-label={platform.label}
+                aria-label={`Listen to ${featuredRelease.title}`}
               >
-                <img src={platform.icon} alt="" width="64" height="64" />
+                <img
+                  src={coverUrl}
+                  alt={`${featuredRelease.title} cover artwork`}
+                  width="640"
+                  height="640"
+                  loading={index === 0 ? "eager" : "lazy"}
+                  fetchPriority={index === 0 ? "high" : "auto"}
+                />
               </a>
-            ))}
-          </nav>
-        </div>
-
-        {featuredRelease.artwork ? (
-          <a
-            className="music-page-cover"
-            href={featuredRelease.links.listen}
-            target="_blank"
-            rel="noreferrer"
-            aria-label={`Listen to ${featuredRelease.title}`}
-          >
-            <picture>
-              <source media="(max-width: 700px)" srcSet={featuredRelease.artwork.mobile} />
-              <img
-                src={featuredRelease.artwork.desktop}
-                alt={featuredRelease.artwork.alt}
-                width="1280"
-                height="1284"
-                loading="eager"
-                fetchPriority="high"
-              />
-            </picture>
-          </a>
-        ) : null}
-      </section>
+            ) : (
+              <div className="music-page-cover">
+                <img
+                  src={coverUrl}
+                  alt={`${featuredRelease.title} cover artwork`}
+                  width="640"
+                  height="640"
+                  loading={index === 0 ? "eager" : "lazy"}
+                  fetchPriority={index === 0 ? "high" : "auto"}
+                />
+              </div>
+            )}
+          </section>
+        );
+      })}
 
       <section className="music-page-catalog" aria-label="Selected releases">
-        {releases.map((release) => (
+        {catalogReleases.map((release) => (
           <article
             className="music-page-release"
-            data-cursor-artwork={release.artwork?.desktop}
+            data-cursor-artwork={urlForImage(release.coverArt).width(400).height(400).url()}
             key={release.slug}
           >
             <div className="music-page-release-heading">
               <h2>{release.title}</h2>
-              <time>{release.year}</time>
+              <time>{release.dateLabel}</time>
             </div>
-            <nav aria-label={`${release.title} links`}>
-              <a href={release.links.watch} target="_blank" rel="noreferrer">
-                Watch now<span aria-hidden="true" />
-              </a>
-              <a href={release.links.listen} target="_blank" rel="noreferrer">
-                Listen<span aria-hidden="true" />
-              </a>
-            </nav>
+            {release.watchUrl || release.listenUrl ? (
+              <nav aria-label={`${release.title} links`}>
+                {release.watchUrl ? (
+                  <a href={release.watchUrl} target="_blank" rel="noreferrer">
+                    Watch now<span aria-hidden="true" />
+                  </a>
+                ) : null}
+                {release.listenUrl ? (
+                  <a href={release.listenUrl} target="_blank" rel="noreferrer">
+                    Listen<span aria-hidden="true" />
+                  </a>
+                ) : null}
+              </nav>
+            ) : (
+              <p className="music-page-release-pending">Links coming soon</p>
+            )}
           </article>
         ))}
       </section>

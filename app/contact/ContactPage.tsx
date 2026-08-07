@@ -17,7 +17,7 @@ const initialValues: ContactFormValues = {
   name: "",
   phone: "",
   email: "",
-  enquiryType: "Wedding / Performance / Other",
+  enquiryType: "Wedding",
   date: "",
   location: "",
   message: "",
@@ -49,7 +49,7 @@ export function ContactPage() {
 
   const inquiryMessage = useMemo(() => buildMessage(values), [values]);
   const emailHref = `mailto:${contactEmail}?subject=${encodeURIComponent(
-    "Wedding / Performance / Other Inquiry",
+    `${values.enquiryType} inquiry`,
   )}&body=${encodeURIComponent(inquiryMessage)}`;
   const whatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
     inquiryMessage,
@@ -112,6 +112,12 @@ export function ContactPage() {
           </a>
         </div>
 
+        <nav className="hero-nav hero-nav-right" aria-label="Home navigation">
+          <a href="/home">
+            <span>Home</span>
+          </a>
+        </nav>
+
         <details className="mobile-menu" ref={mobileMenuRef}>
           <summary aria-label="Toggle navigation">
             <span className="mobile-menu-open">Menu</span>
@@ -121,9 +127,9 @@ export function ContactPage() {
             aria-label="Mobile navigation"
             onClick={() => mobileMenuRef.current?.removeAttribute("open")}
           >
+            <a href="/home">Home</a>
             <a href="/music">Music</a>
             <a href="/weddings">Weddings</a>
-            <a href="/home">Home</a>
           </nav>
         </details>
       </header>
@@ -178,7 +184,6 @@ export function ContactPage() {
               <option>Wedding</option>
               <option>Performance</option>
               <option>Other</option>
-              <option>Wedding / Performance / Other</option>
             </select>
           </label>
           <label className="contact-form-field" style={{ "--field-order": 4 } as CSSProperties}>

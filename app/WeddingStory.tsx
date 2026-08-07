@@ -32,6 +32,10 @@ export function WeddingStory() {
     const section = sectionRef.current;
     const sticky = stickyRef.current;
     const canopyImage = canopyImageRef.current;
+    const siteHeader = document.querySelector<HTMLElement>(".site-header");
+    const performanceSection = document.querySelector<HTMLElement>(
+      ".performance-showcase",
+    );
 
     if (!section || !sticky || !canopyImage) {
       return;
@@ -44,6 +48,16 @@ export function WeddingStory() {
       animationFrame = 0;
 
       const rect = section.getBoundingClientRect();
+      const headerHeight = siteHeader?.offsetHeight ?? 0;
+      const performanceTop =
+        performanceSection?.getBoundingClientRect().top ?? Infinity;
+
+      siteHeader?.toggleAttribute(
+        "data-on-light-story",
+        rect.top <= headerHeight &&
+          rect.bottom > headerHeight &&
+          performanceTop > headerHeight,
+      );
 
       if (
         canopyImage.complete &&
@@ -140,6 +154,7 @@ export function WeddingStory() {
       window.removeEventListener("resize", requestPaint);
       window.cancelAnimationFrame(animationFrame);
       window.clearTimeout(revealTimer);
+      siteHeader?.removeAttribute("data-on-light-story");
     };
   }, []);
 
@@ -192,8 +207,8 @@ export function WeddingStory() {
           ))}
         </div>
 
-        <a className="wedding-story-explore" href="/music">
-          Explore the music <span aria-hidden="true">⟶</span>
+        <a className="wedding-story-explore" href="/contact">
+          Enquire <span aria-hidden="true">⟶</span>
         </a>
       </div>
     </section>

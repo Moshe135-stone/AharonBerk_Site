@@ -14,30 +14,15 @@ const description =
 const descriptionWords = description.split(" ");
 const titleWordCount = titleFirstLine.length + titleSecondLine.length;
 const orbitSlots = ["front", "right", "back", "left"] as const;
-const albums = [
-  {
-    title: "40 Days",
-    slug: "40-days",
-    spotify: "https://open.spotify.com/album/5ZH20UI0C8JdPthYiwUzcg",
-  },
-  {
-    title: "Nafsheinu",
-    slug: "nafsheinu",
-    spotify: "https://open.spotify.com/album/0VEbu8A4mTR2e401opxbh7",
-  },
-  {
-    title: "Tefilas Hashla",
-    slug: "tefilas-hashla",
-    spotify: "https://open.spotify.com/album/745D1UXIIBflDRkx227irz",
-  },
-  {
-    title: "Piha Pascha",
-    slug: "piha-pascha",
-    spotify: "https://open.spotify.com/album/1U329vXa5l0MxMfAFIEPHp",
-  },
-] as const;
 
-export function MusicFeature() {
+export type MusicFeatureAlbum = {
+  title: string;
+  slug: string;
+  cover: string;
+  spotify: string;
+};
+
+export function MusicFeature({ albums }: { albums: MusicFeatureAlbum[] }) {
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
@@ -137,6 +122,72 @@ export function MusicFeature() {
       window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
       if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const mobileViewport = window.matchMedia("(max-width: 900px)");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let sectionVisible = false;
+    let rotationTimer = 0;
+
+    const stopRotation = () => {
+      if (rotationTimer) {
+        window.clearInterval(rotationTimer);
+        rotationTimer = 0;
+      }
+      section.removeAttribute("data-auto-rotating");
+    };
+
+    const advanceAlbum = () => {
+      if (document.hidden || orbitLockedRef.current) return;
+
+      const nextIndex =
+        (activeAlbumIndexRef.current + 1) % albums.length;
+      activeAlbumIndexRef.current = nextIndex;
+      setActiveAlbumIndex(nextIndex);
+    };
+
+    const syncRotation = () => {
+      const shouldRotate =
+        mobileViewport.matches &&
+        !reducedMotion.matches &&
+        sectionVisible &&
+        !document.hidden;
+
+      if (!shouldRotate) {
+        stopRotation();
+        return;
+      }
+
+      section.setAttribute("data-auto-rotating", "");
+      if (!rotationTimer) {
+        rotationTimer = window.setInterval(advanceAlbum, 1900);
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        sectionVisible = entry.isIntersecting;
+        syncRotation();
+      },
+      { threshold: 0.2 },
+    );
+
+    observer.observe(section);
+    mobileViewport.addEventListener("change", syncRotation);
+    reducedMotion.addEventListener("change", syncRotation);
+    document.addEventListener("visibilitychange", syncRotation);
+
+    return () => {
+      stopRotation();
+      observer.disconnect();
+      mobileViewport.removeEventListener("change", syncRotation);
+      reducedMotion.removeEventListener("change", syncRotation);
+      document.removeEventListener("visibilitychange", syncRotation);
     };
   }, []);
 
@@ -307,15 +358,11 @@ export function MusicFeature() {
                 aria-label={`Listen to ${album.title} on Spotify`}
               >
                 <picture>
-                  <source
-                    srcSet={`/music/covers/${album.slug}.webp`}
-                    type="image/webp"
-                  />
                   <img
-                    src={`/music/covers/${album.slug}.jpg`}
+                    src={album.cover}
                     alt={`${album.title} album cover`}
-                    width="1000"
-                    height="1000"
+                    width="640"
+                    height="640"
                     loading="lazy"
                     decoding="async"
                   />
