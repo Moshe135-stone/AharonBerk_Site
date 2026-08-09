@@ -1,3 +1,5 @@
+import { env } from "cloudflare:workers";
+
 type ContactSubmissionPayload = {
   name?: string;
   phone?: string;
@@ -18,7 +20,7 @@ function jsonResponse(body: {ok: boolean}, status: number) {
 }
 
 export async function POST(request: Request) {
-  const webhookUrl = process.env.MAKE_CONTACT_WEBHOOK_URL;
+  const webhookUrl = env.MAKE_CONTACT_WEBHOOK_URL;
   let payload: ContactSubmissionPayload;
   try {
     payload = await request.json();
