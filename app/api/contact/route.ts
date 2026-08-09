@@ -1,4 +1,4 @@
-type ContactBeaconPayload = {
+type ContactSubmissionPayload = {
   name?: string;
   phone?: string;
   email?: string;
@@ -10,13 +10,20 @@ type ContactBeaconPayload = {
   channel?: string;
 };
 
+function jsonResponse(body: {ok: boolean}, status: number) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
 export async function POST(request: Request) {
   const webhookUrl = process.env.MAKE_CONTACT_WEBHOOK_URL;
-  let payload: ContactBeaconPayload;
+  let payload: ContactSubmissionPayload;
   try {
     payload = await request.json();
   } catch {
-    return new Response(null, { status: 400 });
+    return jsonResponse({ ok: false }, 400);
   }
 
   // Renamed to match the spreadsheet columns the Make scenario writes to.
@@ -33,17 +40,22 @@ export async function POST(request: Request) {
     channel: payload.channel ?? "",
   };
 
-  if (webhookUrl) {
-    try {
-      await fetch(webhookUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(row),
-      });
-    } catch {
-      // Never block the visitor's mailto fallback if the Make webhook is unreachable.
-    }
+  if (!webhookUrl) {
+    return jsonResponse({ ok: false }, 500);
   }
 
-  return new Response(null, { status: 204 });
+  try {
+    const webhookResponse = await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(row),
+    });
+    if (!webhookResponse.ok) {
+      return jsonResponse({ ok: false }, 502);
+    }
+  } catch {
+    return jsonResponse({ ok: false }, 502);
+  }
+
+  return jsonResponse({ ok: true }, 200);
 }

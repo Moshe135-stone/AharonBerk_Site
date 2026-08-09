@@ -41,11 +41,14 @@ function buildMessage(values: ContactFormValues) {
   ].join("\n");
 }
 
+type SubmitStatus = "idle" | "submitting" | "success" | "error";
+
 export function ContactPage() {
   const pageRef = useRef<HTMLElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const mobileMenuRef = useRef<HTMLDetailsElement>(null);
   const [values, setValues] = useState(initialValues);
+  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
 
   const inquiryMessage = useMemo(() => buildMessage(values), [values]);
   const emailHref = `mailto:${contactEmail}?subject=${encodeURIComponent(
@@ -88,24 +91,28 @@ export function ContactPage() {
     setValues((current) => ({ ...current, [field]: value }));
   };
 
-  const submitByEmail = (event: FormEvent<HTMLFormElement>) => {
+  const submitForm = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setSubmitStatus("submitting");
 
     try {
-      const payload = JSON.stringify({
-        ...values,
-        page_url: window.location.href,
-        channel: "email",
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...values,
+          page_url: window.location.href,
+          channel: "website",
+        }),
       });
-      navigator.sendBeacon(
-        "/api/contact",
-        new Blob([payload], { type: "application/json" }),
-      );
-    } catch {
-      // never block the mailto if logging fails
-    }
 
-    window.location.href = emailHref;
+      if (!response.ok) throw new Error("Submission failed");
+
+      setSubmitStatus("success");
+      setValues(initialValues);
+    } catch {
+      setSubmitStatus("error");
+    }
   };
 
   return (
@@ -161,7 +168,7 @@ export function ContactPage() {
       </picture>
       <div className="contact-page-shade" aria-hidden="true" />
 
-      <form className="contact-page-form" onSubmit={submitByEmail}>
+      <form className="contact-page-form" onSubmit={submitForm}>
         <div className="contact-form-details">
           <label className="contact-form-field" style={{ "--field-order": 0 } as CSSProperties}>
             <span>Name</span>
@@ -231,9 +238,21 @@ export function ContactPage() {
               onChange={(event) => updateValue("message", event.target.value)}
             />
           </label>
-          <button type="submit">
-            Submit <span aria-hidden="true" />
+          <button type="submit" disabled={submitStatus === "submitting"}>
+            {submitStatus === "submitting" ? "Sending…" : "Submit"}{" "}
+            <span aria-hidden="true" />
           </button>
+          <p
+            className="contact-form-status"
+            data-status={submitStatus}
+            role="status"
+            aria-live="polite"
+          >
+            {submitStatus === "success" &&
+              "Thanks — your message has been sent. Aharon's team will be in touch soon."}
+            {submitStatus === "error" &&
+              "Something went wrong sending your message. Please try WhatsApp or email below."}
+          </p>
         </div>
 
         <nav className="contact-form-alternates" aria-label="Other ways to contact Aharon">

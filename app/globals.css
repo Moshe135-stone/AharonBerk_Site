@@ -4610,6 +4610,33 @@ h3 {
   transform: translateX(0.28rem);
 }
 
+.contact-form-message button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.contact-form-status {
+  position: absolute;
+  right: 0;
+  bottom: -4.4rem;
+  left: 0;
+  margin: 0;
+  font-size: clamp(0.82rem, 1vw, 0.95rem);
+  line-height: 1.4;
+}
+
+.contact-form-status:empty {
+  display: none;
+}
+
+.contact-form-status[data-status="success"] {
+  color: #9fe6a0;
+}
+
+.contact-form-status[data-status="error"] {
+  color: #f2a3a3;
+}
+
 .contact-form-alternates {
   display: flex;
   grid-column: 1 / -1;
