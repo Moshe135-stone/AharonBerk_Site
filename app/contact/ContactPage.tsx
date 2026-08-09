@@ -90,6 +90,21 @@ export function ContactPage() {
 
   const submitByEmail = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    try {
+      const payload = JSON.stringify({
+        ...values,
+        page_url: window.location.href,
+        channel: "email",
+      });
+      navigator.sendBeacon(
+        "/api/contact",
+        new Blob([payload], { type: "application/json" }),
+      );
+    } catch {
+      // never block the mailto if logging fails
+    }
+
     window.location.href = emailHref;
   };
 
