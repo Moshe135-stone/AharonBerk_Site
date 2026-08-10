@@ -56,7 +56,6 @@ export default async function MusicPage() {
             key={featuredRelease.slug}
           >
             <div className="music-page-feature-copy">
-              <p className="music-page-kicker">Featured release</p>
               <h2 id={`featured-release-title-${featuredRelease.slug}`}>
                 {featuredRelease.title}
               </h2>
@@ -72,7 +71,9 @@ export default async function MusicPage() {
                       href={
                         platform.label === "Listen on Spotify"
                           ? featuredRelease.listenUrl
-                          : platform.href
+                          : platform.label === "Listen on Apple Music"
+                            ? featuredRelease.appleMusicUrl ?? platform.href
+                            : platform.href
                       }
                       key={platform.label}
                       target="_blank"
@@ -127,6 +128,7 @@ export default async function MusicPage() {
       })}
 
       <section className="music-page-catalog" aria-label="Selected releases">
+        <h2 className="music-page-catalog-title">Discography</h2>
         {catalogReleases.map((release) => (
           <article
             className="music-page-release"

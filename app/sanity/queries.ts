@@ -26,6 +26,7 @@ export type Release = {
   description?: string;
   coverArt: SanityImage;
   listenUrl?: string;
+  appleMusicUrl?: string;
   watchUrl?: string;
   featured: boolean;
 };
@@ -57,6 +58,7 @@ const releaseProjection = `{
   description,
   coverArt,
   listenUrl,
+  appleMusicUrl,
   watchUrl,
   featured
 }`;

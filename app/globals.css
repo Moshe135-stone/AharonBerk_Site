@@ -621,11 +621,12 @@ h3 {
   min-height: 92svh;
   padding: clamp(3rem, 7vw, 7rem);
   align-items: center;
-  grid-template-columns: minmax(15rem, 0.72fr) minmax(24rem, 1.4fr);
-  gap: clamp(3rem, 8vw, 10rem);
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(2.5rem, 5vw, 6rem);
 }
 
 .music-page-feature-copy {
+  min-width: 0;
   align-self: center;
 }
 
@@ -688,13 +689,15 @@ h3 {
 }
 
 .music-page-feature h2 {
-  max-width: 8ch;
+  width: 100%;
+  max-width: 100%;
   margin: 0;
   font-family: Inter, "Helvetica Neue", Arial, sans-serif;
-  font-size: clamp(3.8rem, 6.5vw, 7rem);
+  font-size: clamp(2.4rem, 3.4vw, 4rem);
   font-variation-settings: "wght" 820;
-  letter-spacing: -0.065em;
-  line-height: 0.88;
+  letter-spacing: -0.055em;
+  line-height: 0.95;
+  white-space: nowrap;
   text-transform: uppercase;
 }
 
@@ -799,6 +802,17 @@ h3 {
     clamp(10rem, 22vh, 18rem);
 }
 
+.music-page-catalog-title {
+  margin: 0 0 clamp(2.5rem, 5vw, 4rem);
+  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(1rem, 1.5vw, 1.35rem);
+  font-variation-settings: "wght" 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+}
+
 .music-page-release {
   display: grid;
   padding: 1rem 0;
@@ -861,12 +875,12 @@ h3 {
 
 .music-page-release h2 {
   margin: 0;
-  overflow-wrap: anywhere;
   font-family: Inter, "Helvetica Neue", Arial, sans-serif;
-  font-size: clamp(2.4rem, 4.4vw, 5rem);
+  font-size: clamp(1.65rem, 3.1vw, 3.6rem);
   font-variation-settings: "wght" 820;
-  letter-spacing: -0.065em;
-  line-height: 0.88;
+  letter-spacing: -0.055em;
+  line-height: 0.95;
+  white-space: nowrap;
   text-transform: uppercase;
 }
 
@@ -946,8 +960,9 @@ h3 {
   }
 
   .music-page-feature h2 {
-    max-width: 7ch;
-    font-size: clamp(3.8rem, 18vw, 5.6rem);
+    max-width: 100%;
+    grid-column: 1 / -1;
+    font-size: clamp(1.75rem, 7.8vw, 2.5rem);
   }
 
   .music-page-description {
@@ -959,7 +974,7 @@ h3 {
 
   .music-page-platforms {
     grid-column: 2;
-    grid-row: 1 / span 4;
+    grid-row: 2 / span 3;
     align-self: end;
     flex-direction: column;
   }
@@ -967,7 +982,7 @@ h3 {
   .music-page-feature-status {
     max-width: 7rem;
     grid-column: 2;
-    grid-row: 1 / span 4;
+    grid-row: 2 / span 3;
     align-self: end;
     text-align: right;
   }
@@ -984,6 +999,11 @@ h3 {
     padding: 6rem 1.25rem 10rem;
   }
 
+  .music-page-catalog-title {
+    margin-bottom: 2.5rem;
+    font-size: 0.95rem;
+  }
+
   .music-page-release {
     padding: 1.25rem 0;
     grid-template-columns: 1fr;
@@ -996,7 +1016,7 @@ h3 {
   }
 
   .music-page-release h2 {
-    font-size: clamp(2rem, 10.5vw, 3.25rem);
+    font-size: clamp(1.35rem, 7.1vw, 2rem);
   }
 
   .music-page-release nav {
@@ -4449,7 +4469,7 @@ h3 {
   grid-template-columns: minmax(18rem, 0.85fr) minmax(24rem, 1.15fr);
   grid-template-rows: auto auto;
   column-gap: clamp(4rem, 8vw, 9rem);
-  row-gap: clamp(2.5rem, 5vh, 4rem);
+  row-gap: clamp(5.5rem, 9vh, 7.5rem);
 }
 
 .contact-form-details {
@@ -4618,7 +4638,7 @@ h3 {
 .contact-form-status {
   position: absolute;
   right: 0;
-  bottom: -4.4rem;
+  bottom: -5.4rem;
   left: 0;
   margin: 0;
   font-size: clamp(0.82rem, 1vw, 0.95rem);
@@ -4629,12 +4649,54 @@ h3 {
   display: none;
 }
 
-.contact-form-status[data-status="success"] {
-  color: #9fe6a0;
-}
-
 .contact-form-status[data-status="error"] {
   color: #f2a3a3;
+}
+
+.contact-form-success {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-height: 15rem;
+  padding: clamp(2rem, 4vw, 3.5rem);
+  border: 1px solid transparent;
+  border-image: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.85),
+      rgba(255, 255, 255, 0.12)
+    )
+    1;
+  align-content: center;
+  justify-items: center;
+  gap: 1.5rem;
+  background: rgba(0, 0, 0, 0.18);
+  text-align: center;
+}
+
+.contact-form-success-mark {
+  display: grid;
+  width: clamp(3.4rem, 5vw, 4.75rem);
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  border-radius: 50%;
+  place-items: center;
+}
+
+.contact-form-success-mark::after {
+  width: 35%;
+  height: 19%;
+  border-bottom: 0.16rem solid #fff;
+  border-left: 0.16rem solid #fff;
+  content: "";
+  transform: translateY(-0.08rem) rotate(-45deg);
+}
+
+.contact-form-success p {
+  max-width: 25rem;
+  margin: 0;
+  font-size: clamp(0.92rem, 1.18vw, 1.1rem);
+  font-weight: 560;
+  line-height: 1.65;
 }
 
 .contact-form-alternates {
@@ -4752,7 +4814,7 @@ h3 {
     display: grid;
     position: static;
     height: auto;
-    grid-template-rows: max-content auto max-content;
+    grid-template-rows: max-content auto max-content max-content;
     gap: 0.65rem;
   }
 
@@ -4767,6 +4829,15 @@ h3 {
   .contact-form-message button {
     position: static;
     justify-self: end;
+  }
+
+  .contact-form-status {
+    position: static;
+    margin: 0;
+  }
+
+  .contact-form-success {
+    min-height: 12rem;
   }
 
   .contact-form-alternates {

@@ -230,29 +230,32 @@ export function ContactPage() {
         </div>
 
         <div className="contact-form-message">
-          <label>
-            <span>Message</span>
-            <textarea
-              rows={8}
-              value={values.message}
-              onChange={(event) => updateValue("message", event.target.value)}
-            />
-          </label>
-          <button type="submit" disabled={submitStatus === "submitting"}>
-            {submitStatus === "submitting" ? "Sending…" : "Submit"}{" "}
-            <span aria-hidden="true" />
-          </button>
-          <p
-            className="contact-form-status"
-            data-status={submitStatus}
-            role="status"
-            aria-live="polite"
-          >
-            {submitStatus === "success" &&
-              "Thanks — your message has been sent. Aharon's team will be in touch soon."}
-            {submitStatus === "error" &&
-              "Something went wrong sending your message. Please try WhatsApp or email below."}
-          </p>
+          {submitStatus === "success" ? (
+            <div className="contact-form-success" role="status" aria-live="polite">
+              <span className="contact-form-success-mark" aria-hidden="true" />
+              <p>Thank you for your submission. Aharon&apos;s team will be in touch with you.</p>
+            </div>
+          ) : (
+            <>
+              <label>
+                <span>Message</span>
+                <textarea
+                  rows={8}
+                  value={values.message}
+                  onChange={(event) => updateValue("message", event.target.value)}
+                />
+              </label>
+              <button type="submit" disabled={submitStatus === "submitting"}>
+                {submitStatus === "submitting" ? "Sending…" : "Submit"}{" "}
+                <span aria-hidden="true" />
+              </button>
+              {submitStatus === "error" ? (
+                <p className="contact-form-status" data-status="error" role="alert">
+                  Something went wrong sending your message. Please try WhatsApp or email below.
+                </p>
+              ) : null}
+            </>
+          )}
         </div>
 
         <nav className="contact-form-alternates" aria-label="Other ways to contact Aharon">

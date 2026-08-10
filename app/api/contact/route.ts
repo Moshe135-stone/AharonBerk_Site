@@ -20,7 +20,7 @@ function jsonResponse(body: {ok: boolean}, status: number) {
 }
 
 export async function POST(request: Request) {
-  const webhookUrl = env.MAKE_WEBHOOK_URL;
+  const webhookUrl = env.MAKE_CONTACT_WEBHOOK_URL;
   let payload: ContactSubmissionPayload;
   try {
     payload = await request.json();
