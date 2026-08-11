@@ -1,102 +1,67 @@
-"use client";
-
-import { useState } from "react";
-
-type EntryChoice = "weddings" | "music";
-
-const choices: Array<{
-  id: EntryChoice;
-  href: string;
-  label: string;
-  description: string;
-}> = [
+const releaseLinks = [
   {
-    id: "weddings",
-    href: "/weddings",
-    label: "Weddings",
-    description: "Live music for Chuppas, Horas and receptions",
+    href: "https://open.spotify.com/artist/2on0c6iQBHGTIn30q7te5Q?si=aBw6EiUFRPaoa9M0yfujMQ",
+    label: "Listen on Spotify",
+    icon: "/social/spotify.svg",
   },
   {
-    id: "music",
-    href: "/music",
-    label: "Music",
-    description: "Original releases and selected recordings",
+    href: "https://music.apple.com/us/artist/aharon-berk/1521973943",
+    label: "Listen on Apple Music",
+    icon: "/social/apple-music.svg",
+  },
+  {
+    href: "https://www.youtube.com/@aharonberkmusic/videos",
+    label: "Watch on YouTube",
+    icon: "/social/youtube.svg",
   },
 ];
 
 export function EntryLanding() {
-  const [activeChoice, setActiveChoice] =
-    useState<EntryChoice>("weddings");
-
   return (
-    <main className="entry-landing" data-active={activeChoice}>
+    <main className="release-entry">
+      <section className="release-entry-panel" aria-labelledby="release-entry-title">
+        <a
+          className="release-entry-close"
+          href="/home"
+          aria-label="Close new release announcement and enter the site"
+        >
+          <span aria-hidden="true" />
+        </a>
+
+        <h1 id="release-entry-title">
+          New
+          <br />
+          Release
+        </h1>
+
+        <nav className="release-entry-links" aria-label="Listen to Mi Adir Avdecha">
+          {releaseLinks.map((link) => (
+            <a
+              href={link.href}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={link.label}
+              key={link.label}
+            >
+              <img src={link.icon} alt="" width="38" height="38" />
+            </a>
+          ))}
+        </nav>
+      </section>
+
       <a
-        className="entry-skip"
-        href="/home"
-        aria-label="Continue to the Aharon Berk home page"
+        className="release-entry-artwork"
+        href="/music"
+        aria-label="Explore the new release Mi Adir Avdecha"
       >
-        <span>Enter site</span>
-      </a>
-
-      <div className="entry-image entry-image-wedding" aria-hidden="true">
-        <picture>
-          <source srcSet="/entry/aharon-image-6.webp" type="image/webp" />
-          <img
-            src="/entry/aharon-image-6.jpg"
-            alt=""
-            width="1600"
-            height="1179"
-            decoding="async"
-            fetchPriority="high"
-          />
-        </picture>
-      </div>
-      <div className="entry-image entry-image-music" aria-hidden="true">
-        <picture>
-          <source srcSet="/entry/aharon-image-5.webp" type="image/webp" />
-          <img
-            src="/entry/aharon-image-5.jpg"
-            alt=""
-            width="1600"
-            height="1064"
-            decoding="async"
-          />
-        </picture>
-      </div>
-      <div className="entry-vignette" aria-hidden="true" />
-
-      <a className="entry-monogram" href="/home" aria-label="Aharon Berk home">
         <img
-          src="/brand/ab-monogram.svg"
-          alt=""
-          width="270"
-          height="156"
+          src="/music/covers/mi-adir-avdecha.jpg"
+          alt="Mi Adir Avdecha by Aharon Berk and Simcha Leiner"
+          width="1600"
+          height="1600"
+          fetchPriority="high"
         />
       </a>
-
-      <nav className="entry-choices" aria-label="Choose an experience">
-        {choices.map((choice) => (
-          <a
-            className="entry-choice"
-            data-choice={choice.id}
-            href={choice.href}
-            key={choice.id}
-            onFocus={() => setActiveChoice(choice.id)}
-            onPointerEnter={() => setActiveChoice(choice.id)}
-          >
-            <span className="entry-choice-label">{choice.label}</span>
-            <span className="entry-choice-description">
-              {choice.description}
-            </span>
-          </a>
-        ))}
-      </nav>
-
-      <p className="entry-active-caption" aria-live="polite">
-        {activeChoice === "weddings"
-          ? "Aharon Berk & Azamra"
-          : "Aharon Berk · Recording artist"}
-      </p>
     </main>
   );
 }
