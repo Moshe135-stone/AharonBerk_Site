@@ -296,6 +296,16 @@ h3 {
   gap: clamp(0.8rem, 1.1vw, 1.25rem);
 }
 
+.release-entry-availability > p {
+  margin: 0 0 0.7rem;
+  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(0.62rem, 0.7vw, 0.76rem);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
 .release-entry-links a {
   display: grid;
   width: clamp(2.15rem, 2.7vw, 2.85rem);

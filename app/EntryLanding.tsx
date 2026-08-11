@@ -29,24 +29,27 @@ export function EntryLanding() {
         </a>
 
         <h1 id="release-entry-title">
-          New
+          Out
           <br />
-          Release
+          Now
         </h1>
 
-        <nav className="release-entry-links" aria-label="Listen to Mi Adir Avdecha">
-          {releaseLinks.map((link) => (
-            <a
-              href={link.href}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={link.label}
-              key={link.label}
-            >
-              <img src={link.icon} alt="" width="38" height="38" />
-            </a>
-          ))}
-        </nav>
+        <div className="release-entry-availability">
+          <p>Available on</p>
+          <nav className="release-entry-links" aria-label="Listen to Mi Adir Avdecha">
+            {releaseLinks.map((link) => (
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={link.label}
+                key={link.label}
+              >
+                <img src={link.icon} alt="" width="38" height="38" />
+              </a>
+            ))}
+          </nav>
+        </div>
       </section>
 
       <a
