@@ -1,22 +1,13 @@
-const releaseLinks = [
-  {
-    href: "https://open.spotify.com/artist/2on0c6iQBHGTIn30q7te5Q?si=aBw6EiUFRPaoa9M0yfujMQ",
-    label: "Listen on Spotify",
-    icon: "/social/spotify.svg",
-  },
-  {
-    href: "https://music.apple.com/us/artist/aharon-berk/1521973943",
-    label: "Listen on Apple Music",
-    icon: "/social/apple-music.svg",
-  },
-  {
-    href: "https://www.youtube.com/@aharonberkmusic/videos",
-    label: "Watch on YouTube",
-    icon: "/social/youtube.svg",
-  },
-];
+import { redirect } from "next/navigation";
+import { getNewReleasePopover } from "./sanity/queries";
+import { urlForImage } from "./sanity/client";
 
-export function EntryLanding() {
+export async function EntryLanding() {
+  const popover = await getNewReleasePopover();
+  if (!popover || !popover.enabled) redirect("/home");
+
+  const artworkUrl = urlForImage(popover.artwork).width(1600).height(1600).url();
+
   return (
     <main className="release-entry">
       <section className="release-entry-panel" aria-labelledby="release-entry-title">
@@ -28,38 +19,50 @@ export function EntryLanding() {
           <span aria-hidden="true" />
         </a>
 
-        <h1 id="release-entry-title">
-          Out
-          <br />
-          Now
-        </h1>
-
-        <div className="release-entry-availability">
-          <p>Available on</p>
-          <nav className="release-entry-links" aria-label="Listen to Mi Adir Avdecha">
-            {releaseLinks.map((link) => (
-              <a
-                href={link.href}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={link.label}
-                key={link.label}
-              >
-                <img src={link.icon} alt="" width="38" height="38" />
-              </a>
-            ))}
-          </nav>
+        <div className="release-entry-heading">
+          {popover.kicker ? <p>{popover.kicker}</p> : null}
+          <h1 id="release-entry-title">
+            {popover.title}
+            {popover.subtitle ? <span>{popover.subtitle}</span> : null}
+          </h1>
         </div>
+
+        {popover.links.length > 0 ? (
+          <div className="release-entry-availability">
+            <p>Available on</p>
+            <nav
+              className="release-entry-links"
+              aria-label={`Listen to ${popover.title}${popover.subtitle ? ` ${popover.subtitle}` : ""}`}
+            >
+              {popover.links.map((link) => (
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={link.label}
+                  key={link.label}
+                >
+                  <img
+                    src={urlForImage(link.icon).width(76).height(76).url()}
+                    alt=""
+                    width="38"
+                    height="38"
+                  />
+                </a>
+              ))}
+            </nav>
+          </div>
+        ) : null}
       </section>
 
       <a
         className="release-entry-artwork"
-        href="/music"
-        aria-label="Explore the new release Mi Adir Avdecha"
+        href={popover.exploreUrl || "/music"}
+        aria-label={`Explore the new release ${popover.title}${popover.subtitle ? ` ${popover.subtitle}` : ""}`}
       >
         <img
-          src="/music/covers/mi-adir-avdecha.jpg"
-          alt="Mi Adir Avdecha by Aharon Berk and Simcha Leiner"
+          src={artworkUrl}
+          alt={popover.artworkAlt}
           width="1600"
           height="1600"
           fetchPriority="high"

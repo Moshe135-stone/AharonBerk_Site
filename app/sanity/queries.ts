@@ -38,6 +38,17 @@ export type MusicPage = {
   platforms: { label: string; href: string; icon: SanityImage }[];
 };
 
+export type NewReleasePopover = {
+  enabled: boolean;
+  kicker?: string;
+  title: string;
+  subtitle?: string;
+  artwork: SanityImage;
+  artworkAlt: string;
+  exploreUrl?: string;
+  links: { label: string; href: string; icon: SanityImage }[];
+};
+
 const performanceProjection = `{
   _id,
   title,
@@ -90,5 +101,11 @@ export async function getReleases(): Promise<Release[]> {
 export async function getFeaturedReleases(): Promise<Release[]> {
   return sanityClient.fetch(
     `*[_type == "release" && featured == true] | order(order asc) ${releaseProjection}`,
+  );
+}
+
+export async function getNewReleasePopover(): Promise<NewReleasePopover | null> {
+  return sanityClient.fetch(
+    `*[_id == "newReleasePopover"][0]{ enabled, kicker, title, subtitle, artwork, artworkAlt, exploreUrl, links }`,
   );
 }
