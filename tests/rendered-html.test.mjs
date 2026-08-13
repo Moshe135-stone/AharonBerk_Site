@@ -31,7 +31,7 @@ test("server-renders the Aharon Berk entry page", async () => {
   const html = await response.text();
   assert.match(
     html,
-    /<title>Aharon Berk \| Weddings &amp; Music<\/title>/i,
+    /<title>Aharon Berk \| Jewish Wedding Singer &amp; Recording Artist<\/title>/i,
   );
   assert.match(html, /Choose an experience/i);
   assert.match(html, /Weddings/);

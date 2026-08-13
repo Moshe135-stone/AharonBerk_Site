@@ -1,15 +1,16 @@
-import type { Metadata } from "next";
 import { SiteFooter } from "../SiteFooter";
 import { SongTickerOutro } from "../SongTickerOutro";
 import { MusicPageHeader, MusicPageMotion } from "./MusicPageMotion";
 import { getFeaturedReleases, getMusicPage, getReleases } from "../sanity/queries";
 import { urlForImage } from "../sanity/client";
+import { pageMetadata } from "../seo";
 
-export const metadata: Metadata = {
-  title: "Music | Aharon Berk",
+export const metadata = pageMetadata({
+  title: "Music & Releases",
   description:
-    "Explore Aharon Berk’s latest release, selected Jewish music and videos.",
-};
+    "Explore Aharon Berk’s latest release, selected Jewish music, singles and videos.",
+  path: "/music",
+});
 
 export default async function MusicPage() {
   const [musicPage, featuredReleases, allReleases] = await Promise.all([
