@@ -94,11 +94,7 @@ export function SiteFooter({ id }: { id?: string }) {
         <div className="footer-copy">
           <p className="footer-bio">
             Aharon Berk is a Jewish singer, recording artist and live performer
-            based in Johannesburg, and the founder and lead vocalist of Azamra.
-          </p>
-          <p className="footer-location">
-            Based in Johannesburg. Available in Cape Town, across South Africa
-            and internationally.
+            and the founder and lead vocalist of Azamra.
           </p>
         </div>
 

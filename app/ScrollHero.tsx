@@ -3,11 +3,8 @@
 import { useEffect, useRef } from "react";
 
 const heroIntroduction =
-  "Aharon Berk is a Jewish singer, recording artist and live performer, creating original music and leading Chuppas, Horas and wedding celebrations in South Africa and internationally.";
+  "Aharon Berk is a Jewish singer, recording artist, and live performer, creating original music and performing at weddings, concerts, and special events.";
 const heroIntroductionWords = heroIntroduction.split(" ");
-const heroLocation =
-  "Based in Johannesburg. Available in Cape Town, across South Africa and internationally.";
-const heroLocationWords = heroLocation.split(" ");
 
 export function ScrollHero() {
   const stageRef = useRef<HTMLElement>(null);
@@ -16,9 +13,7 @@ export function ScrollHero() {
   const heroImageRef = useRef<HTMLImageElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLParagraphElement>(null);
-  const locationRef = useRef<HTMLParagraphElement>(null);
   const visibleWordCountRef = useRef(-1);
-  const visibleLocationWordCountRef = useRef(-1);
 
   const startPaintReveal = () => {
     const sticky = stickyRef.current;
@@ -48,8 +43,6 @@ export function ScrollHero() {
     let travel = 1;
     const introductionWords =
       introRef.current?.querySelectorAll<HTMLElement>(".hero-intro-word");
-    const locationWords =
-      locationRef.current?.querySelectorAll<HTMLElement>(".hero-location-word");
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
@@ -86,13 +79,6 @@ export function ScrollHero() {
         : Math.floor(
             introductionProgress * (heroIntroductionWords.length + 1),
           );
-      const locationProgress = Math.min(
-        1,
-        Math.max(0, (progress - 0.52) / 0.2),
-      );
-      const visibleLocationWordCount = reducedMotion
-        ? heroLocationWords.length
-        : Math.floor(locationProgress * (heroLocationWords.length + 1));
 
       stage.style.setProperty("--hero-progress", progress.toFixed(4));
       stage.style.setProperty(
@@ -117,18 +103,6 @@ export function ScrollHero() {
         visibleWordCountRef.current = visibleWordCount;
       }
 
-      if (
-        locationWords &&
-        visibleLocationWordCount !== visibleLocationWordCountRef.current
-      ) {
-        locationWords.forEach((word, index) => {
-          word.classList.toggle(
-            "is-visible",
-            index < visibleLocationWordCount,
-          );
-        });
-        visibleLocationWordCountRef.current = visibleLocationWordCount;
-      }
     };
 
     const requestUpdate = () => {
@@ -282,17 +256,6 @@ export function ScrollHero() {
           {heroIntroductionWords.map((word, index) => (
             <span
               className="hero-intro-word"
-              aria-hidden="true"
-              key={`${word}-${index}`}
-            >
-              {word}
-            </span>
-          ))}
-        </p>
-        <p className="hero-location" aria-label={heroLocation} ref={locationRef}>
-          {heroLocationWords.map((word, index) => (
-            <span
-              className="hero-location-word"
               aria-hidden="true"
               key={`${word}-${index}`}
             >
