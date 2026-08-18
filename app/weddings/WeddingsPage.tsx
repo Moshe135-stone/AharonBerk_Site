@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const weddingVideo = "/weddings/videos/second-set.mp4";
+const weddingVideo = "/weddings/videos/HORAS_1_v4.mp4";
 
 const services = [
   {
@@ -144,14 +144,6 @@ export function WeddingsPage() {
             playsInline
             autoPlay
             preload="metadata"
-          />
-          <img
-            className="weddings-canopy-frame"
-            src="/weddings/full-canopy.png"
-            alt=""
-            width="1536"
-            height="1024"
-            aria-hidden="true"
           />
           <button
             className="weddings-sound-toggle"

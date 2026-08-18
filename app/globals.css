@@ -1398,38 +1398,29 @@ h3 {
 .weddings-canopy-player {
   width: min(100%, 86rem);
   justify-self: center;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 16 / 9;
+  border: 2px solid #fff;
+  background: #050505;
+  overflow: hidden;
 }
 
 .weddings-canopy-player video {
   display: block;
   position: absolute;
   z-index: 0;
-  top: 18%;
-  left: 17.5%;
-  width: 65%;
-  height: 67%;
-  background: #050505;
-  object-fit: cover;
-}
-
-.weddings-canopy-frame {
-  display: block;
-  position: absolute;
-  z-index: 1;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  pointer-events: none;
+  background: #050505;
+  object-fit: cover;
 }
 
 .weddings-sound-toggle {
   display: inline-flex;
   position: absolute;
   z-index: 2;
-  right: 18.5%;
-  bottom: 16.5%;
+  right: 1rem;
+  bottom: 1rem;
   min-height: 2.65rem;
   padding: 0.65rem 0.9rem;
   border: 1px solid rgba(255, 255, 255, 0.86);
@@ -1732,14 +1723,14 @@ h3 {
   }
 
   .weddings-canopy-player {
-    width: calc(100% + 2.25rem);
-    margin: 0 -1.125rem;
+    width: 100%;
+    margin: 0;
     justify-self: center;
   }
 
   .weddings-sound-toggle {
-    right: 18%;
-    bottom: 14.5%;
+    right: 0.8rem;
+    bottom: 0.8rem;
     min-height: 2.2rem;
     padding: 0.45rem 0.65rem;
     font-size: 0.62rem;
@@ -2300,11 +2291,15 @@ h3 {
 }
 
 .hero-intro {
-  top: clamp(17.5rem, 30vh, 20rem);
-  width: clamp(30rem, 39vw, 43rem);
-  font-size: clamp(1.8rem, 2.44vw, 2.4rem);
+  top: auto;
+  bottom: clamp(5rem, 10vh, 8rem);
+  left: 50%;
+  width: min(82vw, 52rem);
+  font-size: clamp(1.35rem, 1.8vw, 1.8rem);
   line-height: 1.2;
+  text-align: center;
   opacity: calc(1 - var(--hero-intro-exit));
+  transform: translateX(-50%);
   will-change: opacity;
 }
 
@@ -4249,10 +4244,12 @@ h3 {
   .hero-intro {
     top: auto;
     bottom: max(4.25rem, 9svh);
-    left: 1rem;
+    left: 50%;
     width: min(90vw, 32rem);
-    font-size: clamp(1.35rem, 6.4vw, 2rem);
+    font-size: clamp(1.05rem, 4.8vw, 1.45rem);
     line-height: 1.2;
+    text-align: center;
+    transform: translateX(-50%);
   }
 
   .hero-location {
@@ -4409,6 +4406,18 @@ h3 {
   }
 }
 
+@media (max-width: 1100px) {
+  .performance-showcase {
+    --performance-mobile-image-shift: clamp(7rem, 16svh, 11rem);
+  }
+
+  .performance-media-fill {
+    top: var(--performance-mobile-image-shift);
+    bottom: calc(var(--performance-mobile-image-shift) * -1);
+    background-position: center top !important;
+  }
+}
+
 @media (max-width: 580px) {
   h1 {
     font-size: clamp(3.7rem, 18vw, 5.5rem);
@@ -4541,7 +4550,9 @@ h3 {
 }
 
 .hero-intro {
-  line-height: 1.2;
+  font-weight: 700;
+  font-variation-settings: "wght" 700;
+  line-height: 1.35;
 }
 
 /* Page-level display treatment, reusable on semantic section headings. */
