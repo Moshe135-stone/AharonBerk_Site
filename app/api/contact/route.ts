@@ -10,6 +10,7 @@ type ContactSubmissionPayload = {
   message?: string;
   page_url?: string;
   channel?: string;
+  turnstileToken?: string;
 };
 
 function jsonResponse(body: {ok: boolean}, status: number) {
@@ -19,6 +20,25 @@ function jsonResponse(body: {ok: boolean}, status: number) {
   });
 }
 
+async function verifyTurnstileToken(token: string, remoteIp: string | null) {
+  const secret = env.TURNSTILE_SECRET_KEY;
+  if (!secret) return false;
+
+  const body = new URLSearchParams({ secret, response: token });
+  if (remoteIp) body.set("remoteip", remoteIp);
+
+  try {
+    const verifyResponse = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      { method: "POST", body },
+    );
+    const result = (await verifyResponse.json()) as { success: boolean };
+    return result.success === true;
+  } catch {
+    return false;
+  }
+}
+
 export async function POST(request: Request) {
   const webhookUrl = env.MAKE_WEBHOOK_URL;
   let payload: ContactSubmissionPayload;
@@ -26,6 +46,16 @@ export async function POST(request: Request) {
     payload = await request.json();
   } catch {
     return jsonResponse({ ok: false }, 400);
+  }
+
+  if (!payload.turnstileToken) {
+    return jsonResponse({ ok: false }, 400);
+  }
+
+  const remoteIp = request.headers.get("CF-Connecting-IP");
+  const humanVerified = await verifyTurnstileToken(payload.turnstileToken, remoteIp);
+  if (!humanVerified) {
+    return jsonResponse({ ok: false }, 403);
   }
 
   // Renamed to match the spreadsheet columns the Make scenario writes to.

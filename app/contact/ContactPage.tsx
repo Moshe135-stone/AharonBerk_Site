@@ -25,6 +25,26 @@ const initialValues: ContactFormValues = {
 
 const contactEmail = "aharon@azamra.co.za";
 const whatsappNumber = "27722185278";
+const turnstileSiteKey = "0x4AAAAAAEmRNTeVgEHO6sSO";
+
+type TurnstileRenderOptions = {
+  sitekey: string;
+  size?: "invisible" | "normal" | "compact" | "flexible";
+  callback?: (token: string) => void;
+  "expired-callback"?: () => void;
+  "error-callback"?: () => void;
+};
+
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (container: HTMLElement, options: TurnstileRenderOptions) => string;
+      execute: (widgetId: string) => void;
+      reset: (widgetId: string) => void;
+      remove: (widgetId: string) => void;
+    };
+  }
+}
 
 function buildMessage(values: ContactFormValues) {
   return [
@@ -47,8 +67,11 @@ export function ContactPage() {
   const pageRef = useRef<HTMLElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const mobileMenuRef = useRef<HTMLDetailsElement>(null);
+  const turnstileRef = useRef<HTMLDivElement>(null);
+  const turnstileWidgetId = useRef<string | null>(null);
   const [values, setValues] = useState(initialValues);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   const inquiryMessage = useMemo(() => buildMessage(values), [values]);
   const emailHref = `mailto:${contactEmail}?subject=${encodeURIComponent(
@@ -87,12 +110,53 @@ export function ContactPage() {
     };
   }, []);
 
+  useEffect(() => {
+    const scriptId = "cf-turnstile-script";
+
+    const renderWidget = () => {
+      const container = turnstileRef.current;
+      if (!container || !window.turnstile || turnstileWidgetId.current) return;
+      turnstileWidgetId.current = window.turnstile.render(container, {
+        sitekey: turnstileSiteKey,
+        size: "invisible",
+        callback: (token) => setTurnstileToken(token),
+        "expired-callback": () => setTurnstileToken(""),
+        "error-callback": () => setTurnstileToken(""),
+      });
+    };
+
+    if (window.turnstile) {
+      renderWidget();
+      return;
+    }
+
+    let script = document.getElementById(scriptId) as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement("script");
+      script.id = scriptId;
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+    script.addEventListener("load", renderWidget);
+
+    return () => {
+      script?.removeEventListener("load", renderWidget);
+      if (turnstileWidgetId.current && window.turnstile) {
+        window.turnstile.remove(turnstileWidgetId.current);
+        turnstileWidgetId.current = null;
+      }
+    };
+  }, []);
+
   const updateValue = (field: keyof ContactFormValues, value: string) => {
     setValues((current) => ({ ...current, [field]: value }));
   };
 
   const submitForm = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!turnstileToken) return;
     setSubmitStatus("submitting");
 
     try {
@@ -103,6 +167,7 @@ export function ContactPage() {
           ...values,
           page_url: window.location.href,
           channel: "website",
+          turnstileToken,
         }),
       });
 
@@ -112,6 +177,11 @@ export function ContactPage() {
       setValues(initialValues);
     } catch {
       setSubmitStatus("error");
+    } finally {
+      setTurnstileToken("");
+      if (turnstileWidgetId.current && window.turnstile) {
+        window.turnstile.reset(turnstileWidgetId.current);
+      }
     }
   };
 
@@ -245,7 +315,11 @@ export function ContactPage() {
                   onChange={(event) => updateValue("message", event.target.value)}
                 />
               </label>
-              <button type="submit" disabled={submitStatus === "submitting"}>
+              <div ref={turnstileRef} aria-hidden="true" />
+              <button
+                type="submit"
+                disabled={submitStatus === "submitting" || !turnstileToken}
+              >
                 {submitStatus === "submitting" ? "Sending…" : "Submit"}{" "}
                 <span aria-hidden="true" />
               </button>
